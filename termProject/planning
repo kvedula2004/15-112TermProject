@@ -1,0 +1,40 @@
+###########
+# CLASSES #
+###########
+
+Point {
+    attributes {
+        x coordinate
+        y coordinate
+        label
+        label x and y coordinate
+        can move (bool)
+        currently drawn (or hidden)
+    }
+}
+
+Line {
+    attributes {
+        
+    }
+}
+
+LineSegment {
+
+}
+
+Polygon {
+
+}
+
+RegularPolygon(Polygon) {
+
+}
+
+Circle {
+
+}
+
+Locus {
+
+}
