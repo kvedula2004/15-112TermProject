@@ -2,6 +2,9 @@
 # # Point class 
 #################################################
 
+from cmu_112_graphics import *
+
+# TODO test point class
 class Point(object):
     def __init__(self, xCoord, yCoord, canMove, pointName):
         self.x = xCoord
@@ -36,6 +39,15 @@ class Point(object):
     def toggleHidden(self):
         self.isDrawn = not self.isDrawn
 
+    # ! View method (draw point and label)
+
+    def drawPoint(self, canvas):
+        r = 3
+        canvas.create_oval(self.x - r, self.y - r, self.x + r, self.y + r,
+                           fill = 'light blue', outline = 'black',
+                           width = 1)
+        canvas.create_text(self.labelX, self.labelY, text = self.label,
+                           fill = 'black', font = 'Arial 10 bold')
     
 
     
