@@ -15,7 +15,11 @@ Point {
 
 Line {
     attributes {
-        
+        label
+        label x and y coordinate
+        slope
+        point on line
+        currently drawn (or hidden)
     }
 }
 
@@ -33,6 +37,10 @@ RegularPolygon(Polygon) {
 
 Circle {
 
+}
+
+Ellipse {
+    
 }
 
 Locus {
