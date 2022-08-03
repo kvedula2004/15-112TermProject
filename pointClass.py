@@ -3,15 +3,16 @@
 #################################################
 
 from cmu_112_graphics import *
+from boardClass import *
 
-# TODO test point class
+
 class Point(object):
     def __init__(self, xCoord, yCoord, canMove, pointName):
         self.x = xCoord
         self.y = yCoord
         self.label = pointName
-        self.labelX = xCoord - 10
-        self.labelY = yCoord - 10
+        self.label_dx = -0.5
+        self.label_dy = 0.5
         self.canMove = canMove
         self.isDrawn = True
 
@@ -27,26 +28,30 @@ class Point(object):
         labelDist = Point.distance(newX, newY, self.x, self.y)
 
         if labelDist <= 25:
-            (self.labelX, self.labelY) = (newX, newY)
+            (self.label_dx, self.label_dy) = (newX-self.x, newY-self.y)
         else:
             dx = newX - self.x
             dy = newY - self.y
             dx /= (labelDist / 25)
             dy /= (labelDist / 25)
-            self.labelX += dx
-            self.labelY += dy
+            self.label_dx = dx
+            self.label_dy = dy
 
     def toggleHidden(self):
         self.isDrawn = not self.isDrawn
 
     # ! View method (draw point and label)
 
-    def drawPoint(self, canvas):
-        r = 3
-        canvas.create_oval(self.x - r, self.y - r, self.x + r, self.y + r,
-                           fill = 'light blue', outline = 'black',
+    def drawPoint(self, board, app, canvas):
+        if not self.isDrawn: return
+
+        r = 5
+        pixelX, pixelY = board.convertPointToPixel(app, self.x, self.y)
+        labelPixelX, labelPixelY = board.convertPointToPixel(app, self.x+self.label_dx, self.y+self.label_dy)
+        canvas.create_oval(pixelX - r, pixelY - r, pixelX + r, pixelY + r,
+                           fill = 'dark blue', outline = 'black',
                            width = 1)
-        canvas.create_text(self.labelX, self.labelY, text = self.label,
+        canvas.create_text(labelPixelX, labelPixelY, text = self.label,
                            fill = 'black', font = 'Arial 10 bold')
     
 

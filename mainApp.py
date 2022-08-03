@@ -14,6 +14,9 @@ def appStarted(app):
     app.isDragging = False
     app.originalClick_X, app.originalClick_Y = 0, 0
     app.timerDelay = 50
+
+    app.points = []
+    app.points.append(Point(0,1,True, 'A'))
     
 
 # TODO fix snapping
@@ -36,9 +39,14 @@ def timerFired(app):
         app.isDragging = False
         app.board.changeOrigin(app.originalOrigin_X, app.originalOrigin_Y)
 
+def drawPoints(app, canvas):
+    for point in app.points:
+        point.drawPoint(app.board, app, canvas)
+
 
 def redrawAll(app, canvas):
     app.board.drawBoard(app, canvas)
+    drawPoints(app, canvas)
 
 def main():
     runApp(width = 2000, height = 800)
