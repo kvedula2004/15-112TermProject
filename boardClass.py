@@ -24,7 +24,7 @@ class Board(object):
     
     def getPointFromPixel(self, app, pixelX, pixelY):
         dx = (pixelX - app.width / 2 - self.originX) / self.gridLineSpace
-        dy = (pixelY - app.height / 2 - self.originY) / self.gridLineSpace
+        dy = - (pixelY - app.height / 2 - self.originY) / self.gridLineSpace
         return (dx + self.originX, dy + self.originY)
 
     def changeOrigin(self, newOriginX, newOriginY):

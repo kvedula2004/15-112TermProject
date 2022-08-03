@@ -10,14 +10,31 @@ from pointClass import *
 def appStarted(app):
     app.board = Board()
 
-# TODO fix
+    app.originalOrigin_X, app.originalOrigin_Y = 0, 0
+    app.isDragging = False
+    app.originalClick_X, app.originalClick_Y = 0, 0
+    app.timerDelay = 50
+    
+
+# TODO fix snapping
 def mouseDragged(app, event):
-    originalOriginX = app.board.originX
-    originalOriginY = app.board.originY
-    newPoint = Board.getPointFromPixel(app.board, app, event.x, event.y)
-    dx = (newPoint[0] - app.board.originX) / 10
-    dy = (newPoint[1] - app.board.originY) / 10
-    app.board.changeOrigin(originalOriginX + dx, originalOriginY + dy)
+    print(f'MousePoint{app.board.getPointFromPixel(app, event.x, event.y)}')
+    if not app.isDragging:
+        app.originalClick_X, app.originalClick_Y = app.board.getPointFromPixel(app, event.x, event.y)
+        app.originalOrigin_X = app.board.originX
+        app.originalOrigin_Y = app.board.originY
+        app.isDragging = True
+    else:
+        newPoint = app.board.getPointFromPixel(app, event.x, event.y)
+        dx = -newPoint[0] + app.originalClick_X
+        dy = -newPoint[1] + app.originalClick_Y
+        app.board.changeOrigin(app.originalOrigin_X + dx, app.originalOrigin_Y + dy)
+        app.isDragging = False
+
+def timerFired(app):
+    if not app.mouseDragged: 
+        app.isDragging = False
+        app.board.changeOrigin(app.originalOrigin_X, app.originalOrigin_Y)
 
 
 def redrawAll(app, canvas):
