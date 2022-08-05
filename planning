@@ -9,6 +9,7 @@ Point {
         label
         label x and y coordinate
         can move (bool)
+        object points is on
         currently drawn (or hidden)
     }
 }

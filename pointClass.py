@@ -5,16 +5,27 @@
 from cmu_112_graphics import *
 from boardClass import *
 
-
+# TODO fix default naming system
 class Point(object):
-    def __init__(self, xCoord, yCoord, canMove, pointName):
+    defaultNames = []
+    for row in range(10):
+        for i in range(26):
+            defaultNames.append(chr(ord('A')+i) + "'"*row)
+    currIndex = 0
+
+    def __init__(self, xCoord, yCoord, pointName = defaultNames[currIndex], 
+                 currObject = None, canMove = True):
         self.x = xCoord
         self.y = yCoord
         self.label = pointName
+        if self.label == Point.defaultNames[Point.currIndex]: 
+            Point.currIndex += 1
+            Point.currIndex %= 26*26
         self.label_dx = -0.5
         self.label_dy = 0.5
         self.canMove = canMove
         self.isDrawn = True
+        self.onObject = currObject
 
     @staticmethod
     def distance(x1, y1, x2, y2):
@@ -47,7 +58,8 @@ class Point(object):
 
         r = 5
         pixelX, pixelY = board.convertPointToPixel(app, self.x, self.y)
-        labelPixelX, labelPixelY = board.convertPointToPixel(app, self.x+self.label_dx, self.y+self.label_dy)
+        labelPixelX, labelPixelY = board.convertPointToPixel(app, self.x+self.label_dx, 
+                                                             self.y+self.label_dy)
         canvas.create_oval(pixelX - r, pixelY - r, pixelX + r, pixelY + r,
                            fill = 'dark blue', outline = 'black',
                            width = 1)
