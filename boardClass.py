@@ -31,6 +31,8 @@ class Board(object):
         self.originX = newOriginX
         self.originY = newOriginY
 
+    # ! View methods: draws x-line, y-line, and all of board
+
     def drawLine_X(self, app, canvas, xCoord):
         topPointX, topPointY = Board.convertPointToPixel(self, app, xCoord, self.yUpLimit)
         bottomPointY = Board.convertPointToPixel(self, app, xCoord, self.yDownLimit)[1]

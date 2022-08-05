@@ -5,22 +5,16 @@
 from cmu_112_graphics import *
 from boardClass import *
 
-# TODO fix default naming system
 class Point(object):
-    defaultNames = []
-    for row in range(10):
-        for i in range(26):
-            defaultNames.append(chr(ord('A')+i) + "'"*row)
-    currIndex = 0
-
-    def __init__(self, xCoord, yCoord, pointName = defaultNames[currIndex], 
+    def __init__(self, app, xCoord, yCoord, pointName = '', 
                  currObject = None, canMove = True):
         self.x = xCoord
         self.y = yCoord
-        self.label = pointName
-        if self.label == Point.defaultNames[Point.currIndex]: 
-            Point.currIndex += 1
-            Point.currIndex %= 26*26
+        if pointName == '':
+            self.label = app.defaultNames[app.currIndex]
+            app.currIndex += 1
+        else: self.label = pointName
+        
         self.label_dx = -0.5
         self.label_dy = 0.5
         self.canMove = canMove
@@ -31,14 +25,10 @@ class Point(object):
     def distance(x1, y1, x2, y2):
         return ((x1 - x2)**2 + (y1 - y2)**2)**0.5
 
-    def movePoint(self, newX, newY):
-        self.x = newX
-        self.y = newY
-
     def moveLabel(self, newX, newY):
         labelDist = Point.distance(newX, newY, self.x, self.y)
 
-        if labelDist <= 25:
+        if labelDist <= 3:
             (self.label_dx, self.label_dy) = (newX-self.x, newY-self.y)
         else:
             dx = newX - self.x
