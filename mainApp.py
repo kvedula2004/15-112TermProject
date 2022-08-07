@@ -87,6 +87,12 @@ def timerFired(app):
     if app.lastActions == [0] * 10:
         app.isBoardDragging = False
 
+def keyPressed(app, event):
+    if event.key == 'Up':
+        app.board.gridLineSpace = max(app.board.gridLineSpace-2, 10)
+    elif event.key == 'Down':
+        app.board.gridLineSpace = min(app.board.gridLineSpace+2, 30)
+
 #################################################
 # # VIEW
 #################################################
