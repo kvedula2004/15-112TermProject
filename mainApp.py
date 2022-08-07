@@ -11,8 +11,6 @@ def appStarted(app):
     app.board = Board()
     
     app.isBoardDragging = False
-    app.isPointDragging = False
-    app.isLabelDragging = False
     app.originalClick_X, app.originalClick_Y = 0, 0
     app.timerDelay = 20
     app.lastActions = [0] * 10
@@ -28,7 +26,7 @@ def appStarted(app):
     app.points.append(Point(app, 1,0))
     app.points.append(Point(app, 10,10))
     
-
+# computes the closest object among points, point labels, line labels
 def closestObject(app, event):
     minDist = None
     minIndex = -1
@@ -40,7 +38,7 @@ def closestObject(app, event):
         (newEventX, newEventY) = app.board.getPointFromPixel(app, event.x, event.y)
         labelDist = Point.distance(labelX, labelY, newEventX, newEventY)
         pointDist = Point.distance(point.x, point.y, newEventX, newEventY)
-        if min(labelDist, pointDist) > 1: continue
+        if min(labelDist, pointDist) > 2: continue
         if minDist == None or pointDist < minDist:
             (minDist, minIndex) = (pointDist, index)
             isLabelMin = False
@@ -49,6 +47,7 @@ def closestObject(app, event):
             isLabelMin = True
     return (minIndex, isLabelMin)
 
+# drags the board by alternatingly changing origin and moving click
 def boardDragging(app, event):
     if not app.isBoardDragging:
         app.originalClick_X, app.originalClick_Y = app.board.getPointFromPixel(app, event.x, event.y)
@@ -60,11 +59,13 @@ def boardDragging(app, event):
         app.board.changeOrigin(app.board.originX + dx, app.board.originY + dy)
         app.isBoardDragging = False
 
+# moves point to mouse coordinates
 def pointDragging(app, event, index):
     newEventX, newEventY = app.board.getPointFromPixel(app, event.x, event.y)
     app.points[index].x = newEventX
     app.points[index].y = newEventY
 
+# moves label to mouse coordinates
 def labelDragging(app, event, index):
     newEventX, newEventY = app.board.getPointFromPixel(app, event.x, event.y)
     app.points[index].moveLabel(newEventX, newEventY)
@@ -80,15 +81,15 @@ def mouseDragged(app, event):
     else:
         labelDragging(app, event, minIndex)
     
-
 def timerFired(app):
     app.lastActions.pop(0)
     app.lastActions.append(0)
     if app.lastActions == [0] * 10:
         app.isBoardDragging = False
-        app.isPointDragging = False
-        app.isLabelDragging = False
 
+#################################################
+# # VIEW
+#################################################
 
 def drawPoints(app, canvas):
     for point in app.points:

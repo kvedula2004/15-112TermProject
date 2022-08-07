@@ -7,9 +7,9 @@ Point {
         x coordinate
         y coordinate
         label
-        label x and y coordinate
+        label dx and dy coordinate
         can move (bool)
-        object points is on
+        object point is on
         currently drawn (or hidden)
     }
 }
@@ -18,8 +18,7 @@ Line {
     attributes {
         label
         label x and y coordinate
-        slope
-        point on line
+        two points on line
         currently drawn (or hidden)
     }
 }

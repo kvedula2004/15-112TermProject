@@ -15,6 +15,7 @@ class Board(object):
         self.yDownLimit = -100
         self.gridLineSpace = 20
 
+    # converts point to app pixel coordinates
     def convertPointToPixel(self, app, pointX, pointY):
         dx = pointX - self.originX
         dy = pointY - self.originY
@@ -22,16 +23,19 @@ class Board(object):
         newY = app.height / 2 + self.originY - dy * self.gridLineSpace
         return (newX, newY)
     
+    # converts app pixel coordinates to coordinate grid point
     def getPointFromPixel(self, app, pixelX, pixelY):
         dx = (pixelX - app.width / 2 - self.originX) / self.gridLineSpace
         dy = - (pixelY - app.height / 2 - self.originY) / self.gridLineSpace
         return (dx + self.originX, dy + self.originY)
 
+    # moves the origin
     def changeOrigin(self, newOriginX, newOriginY):
         self.originX = newOriginX
         self.originY = newOriginY
 
     # ! View methods: draws x-line, y-line, and all of board
+    # makes sure all x-line and y-line on the visible board
 
     def drawLine_X(self, app, canvas, xCoord):
         topPointX, topPointY = Board.convertPointToPixel(self, app, xCoord, self.yUpLimit)

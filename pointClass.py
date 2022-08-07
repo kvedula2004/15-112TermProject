@@ -10,6 +10,8 @@ class Point(object):
                  currObject = None, canMove = True):
         self.x = xCoord
         self.y = yCoord
+
+        # if no argument provided, default name used
         if pointName == '':
             self.label = app.defaultNames[app.currIndex]
             app.currIndex += 1
@@ -21,10 +23,12 @@ class Point(object):
         self.isDrawn = True
         self.onObject = currObject
 
+    # computes distance between (x1, y1) and (x2, y2)
     @staticmethod
     def distance(x1, y1, x2, y2):
         return ((x1 - x2)**2 + (y1 - y2)**2)**0.5
 
+    # moves the label: if click too far, normalizes label vector to magnitude 3
     def moveLabel(self, newX, newY):
         labelDist = Point.distance(newX, newY, self.x, self.y)
 
@@ -33,11 +37,12 @@ class Point(object):
         else:
             dx = newX - self.x
             dy = newY - self.y
-            dx /= (labelDist / 25)
-            dy /= (labelDist / 25)
+            dx /= (labelDist / 3)
+            dy /= (labelDist / 3)
             self.label_dx = dx
             self.label_dy = dy
 
+    # changes whether point is visible is hidden
     def toggleHidden(self):
         self.isDrawn = not self.isDrawn
 
