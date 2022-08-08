@@ -1,0 +1,88 @@
+###########
+# CLASSES #
+###########
+
+Point {
+    x coordinate
+    y coordinate
+    label
+    label dx and dy coordinate
+    can move (bool)
+    object point is on
+    currently drawn (or hidden)
+}
+
+Line {
+    label
+    label x and y coordinate
+    two points on line
+    currently drawn (or hidden)
+}
+
+LineSegment {
+    same as line
+}
+
+Polygon {
+    label
+    list of points
+    index1, index2, ....
+    currently drawn
+}
+
+RegularPolygon(Polygon) {
+    point1, point2
+    number of vertices
+    # trig bash time
+}
+
+Circle {
+    center
+    radius or other point
+
+    or
+
+    three points
+}
+
+Ellipse {
+    two foci
+    point on perimeter
+}
+
+##############
+# ALGORITHMS #
+##############
+
+shoelace {
+    shoelace algo for computing area of polygons
+}
+
+intersections {
+    gradient flow: 
+    start at a point
+    see which direction decreases the most (w/ radius 1)
+    repeat with radius 0.1, and radius 0.01
+    all for 1000 iterations
+    repeat for all compass directions on corner
+    if you are close (distances approx 0), then return good points
+    if not, no intersection
+}
+
+ellipse draw {
+    compute equation by pain
+    Ax^2+Bxy+Cy^2+Dx+Ey+F=0
+    for all x which make discriminant nonzero, draw circle with small radius
+    make sure it doesn't look ugly
+}
+
+ellipse distance {
+    binary search!
+    see if intersection with circle of radius r and ellipse (by equation)
+}
+
+# maybe if time
+
+triangle centers {
+    computing incenter, circumcenter, orthocenter, centroid by math
+}
