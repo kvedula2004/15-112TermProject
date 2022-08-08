@@ -14,6 +14,7 @@ class Polygon(object):
         self.indices = list(args)
         self.isDrawn = isDrawn
 
+    # draws all line segments and fills in poylgon
     def drawPolygon(self, board, app, canvas):
         for i in range(len(self.indices)):
             if i < len(self.indices) - 1:
@@ -24,7 +25,9 @@ class Polygon(object):
                 ls = LineSegment(self.points, self.indices[i], self.indices[0],
                                  label = '')
                 ls.drawLineSegment(board, app, canvas)
-        # vtxList = (for i in range())
-        # canvas.create_polygon()
+        ptVtxList = tuple(self.points[self.indices[i]] for i in range(len(self.indices)))
+        pixelVtxList = tuple(board.convertPointToPixel(app, pt.x, pt.y)
+                             for pt in ptVtxList)
+        canvas.create_polygon(pixelVtxList, width = 0, fill = 'pink')
 
         

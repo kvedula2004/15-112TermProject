@@ -18,6 +18,7 @@ class Line(object):
         self.labelLoc_x = (point1.x + point2.x) / 2
         self.labelLoc_y = (point1.y + point2.y) / 2
     
+    # computes distance between point and line
     def distance(self, x, y):
         point1, point2 = self.points[self.index1], self.points[self.index2]
         if point1.x == point2.x:
@@ -33,6 +34,7 @@ class Line(object):
         base = Point.distance(x1, y1, x2, y2)
         return 2 * area / base
 
+    # computes the coordinates of closest point on line wrt to a given point
     def closestPoint(self, x, y):
         point1, point2 = self.points[self.index1], self.points[self.index2]
         if point1.x == point2.x:
@@ -49,35 +51,11 @@ class Line(object):
         newY = lineM * newX + lineB
         return Point(newX, newY)
 
-    def moveLabel(self, newX, newY):
-        point = self.closestPoint(newX, newY)
-        (self.labelLoc_x, self.LabelLoc_y) = (point.x, point.y)
-
-        dist = self.distance(newX, newY)
-        dx = newX - self.labelLoc_x
-        dy = newY - self.LabelLoc_y
-
-        if dist >= 3:
-            dx /= (dist / 3)
-            dy /= (dist / 3)
-        (self.label_dx, self.label_dy) = (dx, dy)
-
-    # ! View method (draw line and label)
+    # ! View method (draw line)
 
     def drawLine(self, board, app, canvas):
         point1, point2 = self.points[self.index1], self.points[self.index2]
         if not self.isDrawn: return
-
-        self.label_dx = -0.5
-        self.label_dy = 0.5
-        self.labelLoc_x = (point1.x + point2.x) / 2
-        self.labelLoc_y = (point1.y + point2.y) / 2
-
-        labelX = self.labelLoc_x + self.label_dx
-        labelY = self.labelLoc_y + self.label_dy
-        labelPixelX, labelPixelY = board.convertPointToPixel(app, labelX, labelY)
-        canvas.create_text(labelPixelX, labelPixelY, text = self.label, 
-                           fill = 'green', font = 'Arial 10 bold')
 
         lineWidth = 2.5
         color = 'blue'
@@ -108,6 +86,7 @@ class Line(object):
         leftBound, rightBound = (leftX, leftBoundPixelY), (rightX, rightBoundPixelY)
         upBound, downBound = (upBoundPixelX, topY), (downBoundPixelX, bottomY)
 
+        # casework on where line intersects board boundaries
         if(topY <= leftBound[1] <= bottomY):
             if(topY <= rightBound[1] <= bottomY):
                 canvas.create_line(leftBound, rightBound, fill = color, width = lineWidth)
@@ -135,6 +114,7 @@ class LineSegment(Line):
     def __init__(self, points, index1, index2, label, isDrawn = True):
         super().__init__(points, index1, index2, label, isDrawn)
 
+    # computes distance between linesegment and point
     def distance(self, x, y):
         point1, point2 = self.points[self.index1], self.points[self.index2]
         dist1 = super().distance(x, y)
@@ -142,6 +122,7 @@ class LineSegment(Line):
         dist3 = Point.distance(point2.x, point2.y, x, y)
         return min(dist1, dist2, dist3)
 
+    # computes the coordinates of the closest point
     def closestPoint(self, x, y):
         pt1 = super().closestPoint(x, y)
         point1, point2 = self.points[self.index1], self.points[self.index2]
@@ -154,19 +135,9 @@ class LineSegment(Line):
         elif dist2 <= dist1 and dist2 <= dist3: return point1
         else: return point2
 
+    # draws the line segment
     def drawLineSegment(self, board, app, canvas):
         point1, point2 = self.points[self.index1], self.points[self.index2]
-
-        self.label_dx = -0.5
-        self.label_dy = 0.5
-        self.labelLoc_x = (point1.x + point2.x) / 2
-        self.labelLoc_y = (point1.y + point2.y) / 2
-
-        labelX = self.labelLoc_x + self.label_dx
-        labelY = self.labelLoc_y + self.label_dy
-        labelPixelX, labelPixelY = board.convertPointToPixel(app, labelX, labelY)
-        canvas.create_text(labelPixelX, labelPixelY, text = self.label, 
-                           fill = 'green', font = 'Arial 10 bold')
 
         pixel1 = board.convertPointToPixel(app, point1.x, point1.y)
         pixel2 = board.convertPointToPixel(app, point2.x, point2.y)

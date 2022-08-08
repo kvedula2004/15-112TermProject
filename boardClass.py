@@ -29,10 +29,10 @@ class Board(object):
         dy = - (pixelY - app.height / 2) / self.gridLineSpace
         return (dx + self.originX, dy + self.originY)
 
-    # moves the origin
+    # moves the origin (cannot go too far)
     def changeOrigin(self, newOriginX, newOriginY):
-        self.originX = newOriginX
-        self.originY = newOriginY
+        self.originX = statistics.median([newOriginX, self.xLeftLimit, self.xRightLimit])
+        self.originY = statistics.median([newOriginY, self.yDownLimit, self.yUpLimit])
 
     # ! View methods: draws x-line, y-line, and all of board
     # makes sure all x-line and y-line on the visible board

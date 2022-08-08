@@ -59,7 +59,7 @@ class Point(object):
                            fill = 'dark blue', outline = 'black',
                            width = 1)
         canvas.create_text(labelPixelX, labelPixelY, text = self.label,
-                           fill = 'green', font = 'Arial 10 bold')
+                           fill = 'green', font = 'Arial 15 bold')
     
 
     

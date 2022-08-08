@@ -30,10 +30,12 @@ def appStarted(app):
     app.points.append(Point(app, 7,15))
 
     app.lines = []
-    #app.lines.append(Line(app.points, 0, 1, 'a'))
+    app.lines.append(Line(app.points, 0, 1, 'a'))
 
     app.polygons = []
     app.polygons.append(Polygon('g', app.points, True, 0,1,2,3))
+    app.polygons.append(Polygon('h', app.points, True, 0,1,2))
+    
     
 # computes the closest object among points, point labels, line labels
 def closestObject(app, event):
@@ -46,7 +48,7 @@ def closestObject(app, event):
         labelY = point.y + point.label_dy
         (newEventX, newEventY) = app.board.getPointFromPixel(app, event.x, event.y)
         labelDist = Point.distance(labelX, labelY, newEventX, newEventY)
-        pointDist = Point.distance(point.x, point.y, newEventX, newEventY)
+        pointDist = Point.distance(point.x, point.y, newEventX, newEventY) / 2
         if min(labelDist, pointDist) > 2: continue
         if minDist == None or pointDist < minDist:
             (minDist, minIndex) = (pointDist, index)
@@ -54,6 +56,9 @@ def closestObject(app, event):
         if minDist == None or labelDist < minDist:
             (minDist, minIndex) = (labelDist, index)
             isLabelMin = True
+
+    for index in range(len(app.lines)):
+        line = app.lines[index]
     return (minIndex, isLabelMin)
 
 # drags the board by alternatingly changing origin and moving click
@@ -74,12 +79,13 @@ def pointDragging(app, event, index):
     app.points[index].x = newEventX
     app.points[index].y = newEventY
 
-# moves label to mouse coordinates
+# moves (point) label to mouse coordinates
 def labelDragging(app, event, index):
     newEventX, newEventY = app.board.getPointFromPixel(app, event.x, event.y)
     app.points[index].moveLabel(newEventX, newEventY)
 
 def mouseDragged(app, event):
+    # does the necessary draggings of board,label,point
     app.lastActions.pop(0)
     app.lastActions.append(1)
     (minIndex, isLabelMin) = closestObject(app, event)
@@ -91,12 +97,14 @@ def mouseDragged(app, event):
         labelDragging(app, event, minIndex)
     
 def timerFired(app):
+    # clears up the queue of past dragging history (1 = drag, 0 = not drag)
     app.lastActions.pop(0)
     app.lastActions.append(0)
     if app.lastActions == [0] * 10:
         app.isBoardDragging = False
 
 def keyPressed(app, event):
+    # zooms in and out
     if event.key == 'Up':
         app.board.gridLineSpace = max(app.board.gridLineSpace-2, 10)
     elif event.key == 'Down':
@@ -106,10 +114,12 @@ def keyPressed(app, event):
 # # VIEW
 #################################################
 
+# draws all points in app.points
 def drawPoints(app, canvas):
     for point in app.points:
         point.drawPoint(app.board, app, canvas)
-
+ 
+ # draws all lines in app.lines
 def drawLines(app, canvas):
     for line in app.lines:
         if not isinstance(line, LineSegment):
@@ -117,14 +127,15 @@ def drawLines(app, canvas):
         else:
             line.drawLineSegment(app.board, app, canvas)
 
+# draws all polygons in app.polygons
 def drawPolygons(app, canvas):
     for polygon in app.polygons:
         polygon.drawPolygon(app.board, app, canvas)
 
 def redrawAll(app, canvas):
     app.board.drawBoard(app, canvas)
-    drawLines(app, canvas)
     drawPolygons(app, canvas)
+    drawLines(app, canvas)
     drawPoints(app, canvas)
     
 
