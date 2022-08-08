@@ -19,14 +19,14 @@ class Board(object):
     def convertPointToPixel(self, app, pointX, pointY):
         dx = pointX - self.originX
         dy = pointY - self.originY
-        newX = app.width / 2 + self.originX + dx * self.gridLineSpace
-        newY = app.height / 2 + self.originY - dy * self.gridLineSpace
+        newX = app.width / 2 + dx * self.gridLineSpace
+        newY = app.height / 2 - dy * self.gridLineSpace
         return (newX, newY)
     
     # converts app pixel coordinates to coordinate grid point
     def getPointFromPixel(self, app, pixelX, pixelY):
-        dx = (pixelX - app.width / 2 - self.originX) / self.gridLineSpace
-        dy = - (pixelY - app.height / 2 - self.originY) / self.gridLineSpace
+        dx = (pixelX - app.width / 2) / self.gridLineSpace
+        dy = - (pixelY - app.height / 2) / self.gridLineSpace
         return (dx + self.originX, dy + self.originY)
 
     # moves the origin
@@ -51,8 +51,8 @@ class Board(object):
                            width = lineWidth, fill = 'black')
 
     def drawLine_Y(self, app, canvas, yCoord):
-        leftPointX, leftPointY = Board.convertPointToPixel(self, app, self.xLeftLimit, yCoord)
-        rightPointX = Board.convertPointToPixel(self, app, self.xRightLimit, yCoord)[0]
+        leftPointX, leftPointY = self.convertPointToPixel(app, self.xLeftLimit, yCoord)
+        rightPointX = self.convertPointToPixel(app, self.xRightLimit, yCoord)[0]
         newLineY = statistics.median([leftPointY, 0, app.height])
         newLineX_left = statistics.median([leftPointX, 0, app.width])
         newLineX_right = statistics.median([rightPointX, 0, app.width])

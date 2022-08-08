@@ -5,6 +5,8 @@
 from cmu_112_graphics import *
 from boardClass import *
 from pointClass import *
+from lineClasses import *
+from polygonClasses import *
 
 
 def appStarted(app):
@@ -25,6 +27,13 @@ def appStarted(app):
     app.points.append(Point(app, 0,1))
     app.points.append(Point(app, 1,0))
     app.points.append(Point(app, 10,10))
+    app.points.append(Point(app, 7,15))
+
+    app.lines = []
+    #app.lines.append(Line(app.points, 0, 1, 'a'))
+
+    app.polygons = []
+    app.polygons.append(Polygon('g', app.points, True, 0,1,2,3))
     
 # computes the closest object among points, point labels, line labels
 def closestObject(app, event):
@@ -91,7 +100,7 @@ def keyPressed(app, event):
     if event.key == 'Up':
         app.board.gridLineSpace = max(app.board.gridLineSpace-2, 10)
     elif event.key == 'Down':
-        app.board.gridLineSpace = min(app.board.gridLineSpace+2, 30)
+        app.board.gridLineSpace = min(app.board.gridLineSpace+2, 20)
 
 #################################################
 # # VIEW
@@ -101,10 +110,23 @@ def drawPoints(app, canvas):
     for point in app.points:
         point.drawPoint(app.board, app, canvas)
 
+def drawLines(app, canvas):
+    for line in app.lines:
+        if not isinstance(line, LineSegment):
+            line.drawLine(app.board, app, canvas)
+        else:
+            line.drawLineSegment(app.board, app, canvas)
+
+def drawPolygons(app, canvas):
+    for polygon in app.polygons:
+        polygon.drawPolygon(app.board, app, canvas)
 
 def redrawAll(app, canvas):
     app.board.drawBoard(app, canvas)
+    drawLines(app, canvas)
+    drawPolygons(app, canvas)
     drawPoints(app, canvas)
+    
 
 def main():
     runApp(width = 2000, height = 800)
