@@ -117,7 +117,7 @@ class Sidebar(object):
         headerText = 'Points v'
         if self.showPoints: headerText = 'Points ^'
         canvas.create_text(self.width/2, startY, anchor = 'c',
-                           text = headerText, font = 'Arial 20 bold', fill = 'black')
+                           text = headerText, font = 'Arial 20 bold', fill = 'pink')
 
         if not self.showPoints: return
         for pointButton in self.pointButtons:
@@ -134,7 +134,7 @@ class Sidebar(object):
         headerText = 'Lines v'
         if self.showLines: headerText = 'Lines ^'
         canvas.create_text(self.width/2, startY, anchor = 'c',
-                           text = headerText, font = 'Arial 20 bold', fill = 'black')
+                           text = headerText, font = 'Arial 20 bold', fill = 'pink')
 
         if not self.showLines: return
         for lineButton in self.lineButtons:
@@ -153,7 +153,7 @@ class Sidebar(object):
         headerText = 'Polygons v'
         if self.showPolygons: headerText = 'Polygons ^'
         canvas.create_text(self.width/2, startY, anchor = 'c',
-                           text = headerText, font = 'Arial 20 bold', fill = 'black')
+                           text = headerText, font = 'Arial 20 bold', fill = 'pink')
 
         if not self.showPolygons: return
         for polygonButton in self.polygonButtons:
@@ -188,6 +188,7 @@ class Sidebar(object):
         if x > self.width or y < self.logoHeight: return
 
         y -= self.logoHeight
+        oldY = y % self.boxHeight
         y = int(y // self.boxHeight)
 
         if y == 0: 
@@ -195,6 +196,9 @@ class Sidebar(object):
             return
         if self.showPoints:
             if y <= len(self.pointButtons):
+                if Point.distance(x, oldY, 15, self.boxHeight/2) <= 5:
+                    self.app.points[y-1].isDrawn = not self.app.points[y-1].isDrawn
+                    return
                 self.clickButton('point', y-1)
                 return
             else:
@@ -206,6 +210,9 @@ class Sidebar(object):
             return
         if self.showLines:
             if y <= len(self.lineButtons):
+                if Point.distance(x, oldY, 15, self.boxHeight/2) <= 5:
+                    self.app.lines[y-1].isDrawn = not self.app.lines[y-1].isDrawn
+                    return
                 self.clickButton('line', y-1)
                 return
             else:
@@ -217,6 +224,9 @@ class Sidebar(object):
             return
         if self.showPolygons:
             if y <= len(self.polygonButtons):
+                if Point.distance(x, oldY, 15, self.boxHeight/2) <= 5:
+                    self.app.polygons[y-1].isDrawn = not self.app.polygons[y-1].isDrawn
+                    return
                 self.clickButton('polygon', y-1)
                 return
             else:
