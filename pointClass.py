@@ -21,7 +21,7 @@ class Point(object):
         self.label_dy = 0.5
         self.canMove = canMove
         self.isDrawn = True
-        self.onObject = currObject
+        self.currObject = currObject
 
     # computes distance between (x1, y1) and (x2, y2)
     @staticmethod
@@ -41,6 +41,15 @@ class Point(object):
             dy /= (labelDist / 3)
             self.label_dx = dx
             self.label_dy = dy
+
+    def movePoint(self, newX, newY):
+        if not self.canMove: return
+        
+        if self.currObject == None:
+            self.x, self.y = newX, newY
+        else:
+            newPt = self.currObject.closestPoint(newX, newY)
+            self.x, self.y = newPt.x, newPt.y
 
     # changes whether point is visible is hidden
     def toggleHidden(self):

@@ -16,6 +16,7 @@ class Polygon(object):
 
     # draws all line segments and fills in poylgon
     def drawPolygon(self, board, app, canvas):
+        if not self.isDrawn: return
         for i in range(len(self.indices)):
             if i < len(self.indices) - 1:
                 ls = LineSegment(self.points, self.indices[i], self.indices[i+1],

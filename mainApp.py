@@ -8,6 +8,7 @@ from pointClass import *
 from lineClasses import *
 from polygonClasses import *
 from sidebar import *
+from inputParse import *
 
 
 def appStarted(app):
@@ -42,9 +43,10 @@ def appStarted(app):
     app.ellipses = []
 
     app.sidebar = Sidebar(app)
+    app.inputParse = InputParse(app, '')
     
     
-# computes the closest object among points, point labels, line labels
+# computes the closest object among points, point labels
 def closestObject(app, event):
     minDist = None
     minIndex = -1
@@ -64,8 +66,6 @@ def closestObject(app, event):
             (minDist, minIndex) = (labelDist, index)
             isLabelMin = True
 
-    for index in range(len(app.lines)):
-        line = app.lines[index]
     return (minIndex, isLabelMin)
 
 # drags the board by alternatingly changing origin and moving click
@@ -83,8 +83,7 @@ def boardDragging(app, event):
 # moves point to mouse coordinates
 def pointDragging(app, event, index):
     newEventX, newEventY = app.board.getPointFromPixel(app, event.x, event.y)
-    app.points[index].x = newEventX
-    app.points[index].y = newEventY
+    app.points[index].movePoint(newEventX, newEventY)
 
 # moves (point) label to mouse coordinates
 def labelDragging(app, event, index):
@@ -119,6 +118,11 @@ def keyPressed(app, event):
 
 def mousePressed(app, event):
     app.sidebar.doButtonAction(event.x, event.y)
+    if event.x <= app.sidebar.scaledLogo.size[0] and event.y <= app.sidebar.scaledLogo.size[1]:
+        input = app.getUserInput('Enter a valid command')
+        app.inputParse.input = input
+        app.inputParse.parseInput()
+
 
 #################################################
 # # VIEW
