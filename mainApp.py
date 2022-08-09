@@ -7,6 +7,7 @@ from boardClass import *
 from pointClass import *
 from lineClasses import *
 from polygonClasses import *
+from sidebar import *
 
 
 def appStarted(app):
@@ -35,6 +36,12 @@ def appStarted(app):
     app.polygons = []
     app.polygons.append(Polygon('g', app.points, True, 0,1,2,3))
     app.polygons.append(Polygon('h', app.points, True, 0,1,2))
+
+    app.circles = []
+
+    app.ellipses = []
+
+    app.sidebar = Sidebar(app)
     
     
 # computes the closest object among points, point labels, line labels
@@ -110,6 +117,9 @@ def keyPressed(app, event):
     elif event.key == 'Down':
         app.board.gridLineSpace = min(app.board.gridLineSpace+2, 20)
 
+def mousePressed(app, event):
+    app.sidebar.doButtonAction(event.x, event.y)
+
 #################################################
 # # VIEW
 #################################################
@@ -137,6 +147,7 @@ def redrawAll(app, canvas):
     drawPolygons(app, canvas)
     drawLines(app, canvas)
     drawPoints(app, canvas)
+    app.sidebar.drawSidebar(canvas)
     
 
 def main():

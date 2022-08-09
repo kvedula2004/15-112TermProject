@@ -30,4 +30,16 @@ class Polygon(object):
                              for pt in ptVtxList)
         canvas.create_polygon(pixelVtxList, width = 0, fill = 'pink')
 
-        
+    # computes distance between point and polygon
+    def distance(self, x, y):
+        minDist = None
+        for i in range(len(self.indices)):
+            if i < len(self.indices) - 1:
+                ls = LineSegment(self.points, self.indices[i], self.indices[i+1],
+                                 label = '')
+            else:
+                ls = LineSegment(self.points, self.indices[i], self.indices[0],
+                                 label = '')
+            if minDist == None or ls.distance(x,y) < minDist:
+                    minDist = ls.distance(x,y)
+        return minDist        
