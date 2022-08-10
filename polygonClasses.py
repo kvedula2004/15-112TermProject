@@ -29,30 +29,32 @@ class Polygon(object):
         canvas.create_polygon(pixelVtxList, width = 0, fill = 'pink')
 
     # computes distance between point and polygon
-    def distance(self, x, y):
+    def distance(self, app, x, y):
         minDist = None
         for i in range(len(self.indices)):
             if i < len(self.indices) - 1:
-                ls = LineSegment(self.points, self.indices[i], self.indices[i+1],
+                ls = LineSegment(app.points, self.indices[i], self.indices[i+1],
                                  label = '')
             else:
-                ls = LineSegment(self.points, self.indices[i], self.indices[0],
+                ls = LineSegment(app.points, self.indices[i], self.indices[0],
                                  label = '')
-            if minDist == None or ls.distance(x,y) < minDist:
-                minDist = ls.distance(x,y)
+            if minDist == None or ls.distance(app, x,y) < minDist:
+                minDist = ls.distance(app, x,y)
         return minDist
 
-    def closestPoint(self, x, y):
+    def closestPoint(self, app, x, y):
         minPoint = None
         minDist = None
         for i in range(len(self.indices)):
             if i < len(self.indices) - 1:
-                ls = LineSegment(self.points, self.indices[i], self.indices[i+1],
+                ls = LineSegment(app.points, self.indices[i], self.indices[i+1],
                                  label = '')
             else:
-                ls = LineSegment(self.points, self.indices[i], self.indices[0],
+                ls = LineSegment(app.points, self.indices[i], self.indices[0],
                                  label = '')
-            if minDist == None or ls.distance(x, y) < minDist:
-                minDist = ls.distance(x, y)
-                minPoint = ls.closestPoint(x, y)
+            if minDist == None or ls.distance(app, x, y) < minDist:
+                minDist = ls.distance(app, x, y)
+                minPoint = ls.closestPoint(app, x, y)
         return minPoint
+
+    

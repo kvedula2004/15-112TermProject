@@ -57,6 +57,7 @@ class InputParse(object):
                 objLabel = objectNames[index]
                 if interior == objLabel:
                     self.app.points.append(Point(self.app,0,0,'',objectList[index]))
+                    self.app.pointNames.add(self.app.points[-1].label)
                     return
             self.output = 'Not valid object.'
 
@@ -105,6 +106,33 @@ class InputParse(object):
         except:
             self.output = 'Not valid object.'
 
+    def createCircle(self):
+        # 'Circle(...)' to '...'
+        interior = self.input[7:-1]
+        try:
+            newInterior = tuple(interior.split(','))
+            newInterior = [elem.strip() for elem in newInterior]
+            for ptLabel in newInterior:
+                if ptLabel not in self.app.pointNames:
+                    raise Exception
+            if len(newInterior) > 3 or len(newInterior) < 2: raise Exception
+            
+            circleLabel = self.app.defaultObjNames[self.app.currObjIndex]
+            self.app.currObjIndex += 1
+            labelIndices = [-1, -1, -1]
+            for i in range(len(self.app.points)):
+                label = self.app.points[i].label
+                for j in range(len(newInterior)):
+                    if newInterior[j] == label:
+                        labelIndices[j] = i
+            if labelIndices[2] == -1:
+                self.app.circles.append(Circle(circleLabel, labelIndices[0], labelIndices[1]))
+            else:
+                self.app.circles.append(Circle(circleLabel, labelIndices[0], labelIndices[1],
+                                               index3=labelIndices[2]))
+        except:
+            self.output = 'Not valid object.'
+
     def parseInput(self):
         if self.input.startswith('Point'):
             self.createPoint()
@@ -112,6 +140,8 @@ class InputParse(object):
             self.createLine()
         elif self.input.startswith('Polygon'):
             self.createPolygon()
+        elif self.input.startswith('Circle'):
+            self.createCircle()
         else:
             self.output = 'Not valid input.'
 

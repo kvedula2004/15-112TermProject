@@ -8,11 +8,12 @@ from boardClass import *
 class Point(object):
     def __init__(self, app, xCoord, yCoord, pointName = '', 
                  currObject = None, canMove = True):
+        self.app = app
         if currObject == None:
             self.x = xCoord
             self.y = yCoord
         else:
-            self.x, self.y = currObject.closestPoint(xCoord, yCoord)
+            self.x, self.y = currObject.closestPoint(app, xCoord, yCoord)
 
         # if no argument provided, default name used
         if pointName == '':
@@ -53,7 +54,7 @@ class Point(object):
         if self.currObject == None:
             self.x, self.y = newX, newY
         else:
-            self.x, self.y = self.currObject.closestPoint(newX, newY)
+            self.x, self.y = self.currObject.closestPoint(self.app, newX, newY)
 
     # changes whether point is visible is hidden
     def toggleHidden(self):

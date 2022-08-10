@@ -20,7 +20,7 @@ class Line(object):
         self.labelLoc_y = (point1.y + point2.y) / 2
     
     # computes distance between point and line
-    def distance(self, x, y):
+    def distance(self, app, x, y):
         point1, point2 = self.points[self.index1], self.points[self.index2]
         if point1.x == point2.x:
             return abs(x - point1.x)
@@ -36,7 +36,7 @@ class Line(object):
         return 2 * area / base
 
     # computes the coordinates of closest point on line wrt to a given point
-    def closestPoint(self, x, y):
+    def closestPoint(self, app, x, y):
         point1, point2 = self.points[self.index1], self.points[self.index2]
         if point1.x == point2.x:
             return (point1.x, y)
@@ -116,16 +116,16 @@ class LineSegment(Line):
         super().__init__(points, index1, index2, label, isDrawn)
 
     # computes distance between linesegment and point
-    def distance(self, x, y):
+    def distance(self, app, x, y):
         point1, point2 = self.points[self.index1], self.points[self.index2]
-        dist1 = super().distance(x, y)
+        dist1 = super().distance(app, x, y)
         dist2 = Point.distance(point1.x, point1.y, x, y)
         dist3 = Point.distance(point2.x, point2.y, x, y)
         return min(dist1, dist2, dist3)
 
     # computes the coordinates of the closest point
-    def closestPoint(self, x, y):
-        pt1 = super().closestPoint(x, y)
+    def closestPoint(self, app, x, y):
+        pt1 = super().closestPoint(app, x, y)
         point1, point2 = self.points[self.index1], self.points[self.index2]
         
         distA = Point.distance(pt1[0],pt1[1], point1.x, point1.y)
