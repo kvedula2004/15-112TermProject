@@ -134,7 +134,9 @@ class InputParse(object):
             self.output = 'Not valid object.'
 
     def parseInput(self):
-        if self.input.startswith('Point'):
+        if self.input == None:
+            self.output = ''
+        elif self.input.startswith('Point'):
             self.createPoint()
         elif self.input.startswith('Line'):
             self.createLine()

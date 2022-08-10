@@ -16,6 +16,7 @@ def appStarted(app):
     app.board = Board()
     
     app.isBoardDragging = False
+    app.isPolygonDragging = False
     app.originalClick_X, app.originalClick_Y = 0, 0
     app.timerDelay = 20
     app.lastActions = [0] * 10
@@ -45,7 +46,7 @@ def appStarted(app):
 
     app.polygons = []
     app.polygons.append(Polygon('g', (0,1,2,3)))
-    app.polygons.append(Polygon('h', (0,1,2)))
+    #app.polygons.append(Polygon('h', (0,1,2)))
 
     app.circles = []
     app.circles.append(Circle('m', 0, 1))
@@ -91,6 +92,34 @@ def boardDragging(app, event):
         app.board.changeOrigin(app.board.originX + dx, app.board.originY + dy)
         app.isBoardDragging = False
 
+def closestPolygon(app, event):
+    newX, newY = app.board.getPointFromPixel(app, event.x, event.y)
+    minIndex = None
+    minDist = None
+    for i in range(len(app.polygons)):
+        if minIndex == None:
+            minIndex = i
+            minDist = app.polygons[i].distance(app, newX, newY)
+            continue
+        polygon = app.polygons[i]
+        if minDist == None or polygon.distance(app, newX, newY) < minDist:
+            minDist = polygon.distance(app, newX, newY)
+            minIndex = i
+    return (minIndex, minDist)
+
+def polygonDragging(app, event):
+    if not app.isPolygonDragging:
+        app.originalClick_X, app.originalClick_Y = app.board.getPointFromPixel(app, event.x, event.y)
+        app.isPolygonDragging = True
+    else:
+        newPoint = app.board.getPointFromPixel(app, event.x, event.y)
+        dx = -newPoint[0] + app.originalClick_X
+        dy = -newPoint[1] + app.originalClick_Y
+        minIndex = closestPolygon(app, event)[0]
+        app.polygons[minIndex].movePolygon(app, -dx, -dy)
+        app.isPolygonDragging = False
+
+
 # moves point to mouse coordinates
 def pointDragging(app, event, index):
     newEventX, newEventY = app.board.getPointFromPixel(app, event.x, event.y)
@@ -106,8 +135,12 @@ def mouseDragged(app, event):
     app.lastActions.pop(0)
     app.lastActions.append(1)
     (minIndex, isLabelMin) = closestObject(app, event)
+    polyDist = closestPolygon(app, event)[1]
     if minIndex == -1:
-        boardDragging(app, event)
+        if polyDist < 10:
+            polygonDragging(app, event)
+        else:
+            boardDragging(app, event)
     elif not isLabelMin:
         pointDragging(app, event, minIndex)
     else:
@@ -119,6 +152,7 @@ def timerFired(app):
     app.lastActions.append(0)
     if app.lastActions == [0] * 10:
         app.isBoardDragging = False
+        app.isPolygonDragging = False
 
 def keyPressed(app, event):
     # zooms in and out

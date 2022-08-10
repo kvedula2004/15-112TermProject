@@ -57,4 +57,9 @@ class Polygon(object):
                 minPoint = ls.closestPoint(app, x, y)
         return minPoint
 
+    def movePolygon(self, app, dx, dy):
+        for index in self.indices:
+            app.points[index].x += dx
+            app.points[index].y += dy
+
     
