@@ -42,5 +42,20 @@ class Polygon(object):
                 ls = LineSegment(self.points, self.indices[i], self.indices[0],
                                  label = '')
             if minDist == None or ls.distance(x,y) < minDist:
-                    minDist = ls.distance(x,y)
-        return minDist        
+                minDist = ls.distance(x,y)
+        return minDist
+
+    def closestPoint(self, x, y):
+        minPoint = None
+        minDist = None
+        for i in range(len(self.indices)):
+            if i < len(self.indices) - 1:
+                ls = LineSegment(self.points, self.indices[i], self.indices[i+1],
+                                 label = '')
+            else:
+                ls = LineSegment(self.points, self.indices[i], self.indices[0],
+                                 label = '')
+            if minDist == None or ls.distance(x, y) < minDist:
+                minDist = ls.distance(x, y)
+                minPoint = ls.closestPoint(x, y)
+        return minPoint

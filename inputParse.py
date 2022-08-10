@@ -18,7 +18,12 @@ class InputParse(object):
 
     @staticmethod
     def checkIntFloat(num):
-        return num.isdigit() or num.isfloat()
+        if num.isdigit(): return True
+        try:
+            float(num)
+            return True
+        except:
+            return False
 
     def createPoint(self):
         # 'Point(...)' to '...'
@@ -55,9 +60,34 @@ class InputParse(object):
                     return
             self.output = 'Not valid object.'
 
+    def createLine(self):
+        # 'Line(...)' to '...'
+        interior = self.input[5:-1]
+        try:
+            newInterior = tuple(interior.split(','))
+            newInterior = [elem.strip() for elem in newInterior]
+            if len(newInterior) != 2:
+                raise Exception
+            pt1, pt2 = newInterior[0], newInterior[1]
+            if pt1 not in self.app.pointNames or pt2 not in self.app.pointNames:
+                raise Exception
+            
+            label = self.app.defaultObjNames[self.app.currObjIndex]
+            self.app.currObjIndex += 1
+            index1, index2 = 0, 0
+            for i in range(len(self.app.points)):
+                point = self.app.points[i]
+                if point.label == pt1: index1 = i
+                if point.label == pt2: index2 = i
+            self.app.lines.append(Line(self.app.points, index1, index2, label))
+        except:
+            self.output = 'Not valid object.'
+
     def parseInput(self):
         if self.input.startswith('Point'):
             self.createPoint()
+        elif self.input.startswith('Line'):
+            self.createLine()
         else:
             self.output = 'Not valid input.'
 

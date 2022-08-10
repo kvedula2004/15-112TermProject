@@ -69,7 +69,7 @@ class Line(object):
                                fill = color, width = lineWidth)
             return
         if pixel1[1] == pixel2[1]:
-            canvas.create_line(leftX, pixel1[1], rightX, pixel2[2],
+            canvas.create_line(leftX, pixel1[1], rightX, pixel2[1],
                                fill = color, width = lineWidth)
             return
 
@@ -127,13 +127,17 @@ class LineSegment(Line):
         pt1 = super().closestPoint(x, y)
         point1, point2 = self.points[self.index1], self.points[self.index2]
         
-        dist1 = Point.distance(x, y, pt1.x, pt1.y)
-        dist2 = Point.distance(x, y, point1.x, point1.y)
-        dist3 = Point.distance(x, y, point2.x, point2.y)
+        distA = Point.distance(pt1[0],pt1[1], point1.x, point1.y)
+        distB = Point.distance(pt1[0],pt1[1], point2.x, point2.y)
+        distC = Point.distance(point2.x,point2.y, point1.x, point1.y)
+        if abs(distA + distB - distC) < 10**-4:
+            return pt1
+        
+        dist1 = Point.distance(x, y, point1.x, point1.y)
+        dist2 = Point.distance(x, y, point2.x, point2.y)
 
-        if dist1 <= dist2 and dist1 <= dist3: return pt1
-        elif dist2 <= dist1 and dist2 <= dist3: return point1
-        else: return point2
+        if dist1 <= dist2: return (point1.x, point1.y)
+        else: return (point2.x, point2.y)
 
     # draws the line segment
     def drawLineSegment(self, board, app, canvas):

@@ -38,16 +38,14 @@ def appStarted(app):
     
 
     app.lines = []
-    app.lineNames = set()
+    app.defaultObjNames = [ptName.lower() for ptName in app.defaultNames]
+    app.currObjIndex = 10
     app.lines.append(Line(app.points, 0, 1, 'a'))
-    app.lineNames.add(app.lines[0].label)
 
     app.polygons = []
     app.polygonNames = set()
     app.polygons.append(Polygon('g', app.points, True, 0,1,2,3))
-    app.polygonNames.add(app.polygons[0].label)
     app.polygons.append(Polygon('h', app.points, True, 0,1,2))
-    app.polygonNames.add(app.polygons[1].label)
 
     app.circles = []
 
@@ -134,6 +132,7 @@ def mousePressed(app, event):
         app.inputParse.input = input
         app.inputParse.parseInput()
         app.sidebar.__init__(app)
+        return
 
 
 #################################################
@@ -168,7 +167,7 @@ def redrawAll(app, canvas):
     
 
 def main():
-    runApp(width = 2000, height = 800)
+    runApp(width = 1440, height = 785)
 
 if (__name__ == '__main__'):
     main()

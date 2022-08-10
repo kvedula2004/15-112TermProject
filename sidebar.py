@@ -82,8 +82,10 @@ class Sidebar(object):
         self.app = app
         self.clicked = False
         self.clickedObjectType, self.clickedObjectIndex = None, -1
-        self.width = app.width / 10
+        self.width = app.width / 9
 
+        # picture modified from triangle tool logo from
+        # https://www.geogebra.org/classic
         logo = app.loadImage('ggb112-logo.png')
         imageWidth = logo.size[0]
         self.scaledLogo = self.app.scaleImage(logo, self.width/imageWidth)
