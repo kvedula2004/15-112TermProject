@@ -26,17 +26,28 @@ def appStarted(app):
     app.currIndex = 0
 
     app.points = []
-    app.points.append(Point(app, 0,1))
-    app.points.append(Point(app, 1,0))
+    app.pointNames = set()
+    app.points.append(Point(app, 0,5))
+    app.pointNames.add(app.points[0].label)
+    app.points.append(Point(app, 5,0))
+    app.pointNames.add(app.points[1].label)
     app.points.append(Point(app, 10,10))
+    app.pointNames.add(app.points[2].label)
     app.points.append(Point(app, 7,15))
+    app.pointNames.add(app.points[3].label)
+    
 
     app.lines = []
+    app.lineNames = set()
     app.lines.append(Line(app.points, 0, 1, 'a'))
+    app.lineNames.add(app.lines[0].label)
 
     app.polygons = []
+    app.polygonNames = set()
     app.polygons.append(Polygon('g', app.points, True, 0,1,2,3))
+    app.polygonNames.add(app.polygons[0].label)
     app.polygons.append(Polygon('h', app.points, True, 0,1,2))
+    app.polygonNames.add(app.polygons[1].label)
 
     app.circles = []
 
@@ -122,6 +133,7 @@ def mousePressed(app, event):
         input = app.getUserInput('Enter a valid command')
         app.inputParse.input = input
         app.inputParse.parseInput()
+        app.sidebar.__init__(app)
 
 
 #################################################
@@ -131,6 +143,7 @@ def mousePressed(app, event):
 # draws all points in app.points
 def drawPoints(app, canvas):
     for point in app.points:
+        point.movePoint(point.x, point.y)
         point.drawPoint(app.board, app, canvas)
  
  # draws all lines in app.lines

@@ -38,18 +38,18 @@ class Line(object):
     def closestPoint(self, x, y):
         point1, point2 = self.points[self.index1], self.points[self.index2]
         if point1.x == point2.x:
-            return Point(point1.x, y)
+            return (point1.x, y)
         if point1.y == point2.y:
-            return Point(x, point1.y)
+            return (x, point1.y)
 
         lineM = (point2.y-point1.y)/(point2.x-point1.x)
         lineB = point1.y - lineM * point1.x
         perpLineM = -1 / lineM
         perpLineB = y - perpLineM * x
 
-        newX = (perpLineB - lineB) / (lineM - lineB)
+        newX = (perpLineB - lineB) / (lineM - perpLineM)
         newY = lineM * newX + lineB
-        return Point(newX, newY)
+        return (newX, newY)
 
     # ! View method (draw line)
 
