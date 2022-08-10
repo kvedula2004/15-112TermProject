@@ -83,11 +83,35 @@ class InputParse(object):
         except:
             self.output = 'Not valid object.'
 
+    def createPolygon(self):
+        # 'Polygon(...)' to '...'
+        interior = self.input[8:-1]
+        try:
+            newInterior = tuple(interior.split(','))
+            newInterior = [elem.strip() for elem in newInterior]
+            for ptLabel in newInterior:
+                if ptLabel not in self.app.pointNames:
+                    raise Exception
+            
+            polyLabel = self.app.defaultObjNames[self.app.currObjIndex]
+            self.app.currObjIndex += 1
+            labelIndices = [-1 for i in range(len(newInterior))]
+            for i in range(len(self.app.points)):
+                label = self.app.points[i].label
+                for j in range(len(newInterior)):
+                    if newInterior[j] == label:
+                        labelIndices[j] = i
+            self.app.polygons.append(Polygon(polyLabel, tuple(labelIndices), isDrawn = True))
+        except:
+            self.output = 'Not valid object.'
+
     def parseInput(self):
         if self.input.startswith('Point'):
             self.createPoint()
         elif self.input.startswith('Line'):
             self.createLine()
+        elif self.input.startswith('Polygon'):
+            self.createPolygon()
         else:
             self.output = 'Not valid input.'
 

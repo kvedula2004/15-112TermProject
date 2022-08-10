@@ -10,7 +10,8 @@ class Line(object):
     def __init__(self, points, index1, index2, label, isDrawn = True):
         self.points = points
         self.index1, self.index2 = index1, index2
-        point1, point2 = points[index1], points[index2]
+        point1 = points[index1]
+        point2 = points[index2]
         self.label = label
         self.isDrawn = isDrawn
         self.label_dx = -0.5

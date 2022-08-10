@@ -66,7 +66,7 @@ class Button(object):
 
         polyStr = ''
         for index in polygon.indices:
-            polyStr += polygon.points[index].label
+            polyStr += self.app.points[index].label
         canvas.create_oval(10, startY - 5, 20, startY + 5, fill=color, width=1)
         canvas.create_text(20, startY, 
                             text=f' {polygon.label} : {polyStr}',

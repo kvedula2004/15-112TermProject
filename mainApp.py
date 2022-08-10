@@ -9,6 +9,7 @@ from lineClasses import *
 from polygonClasses import *
 from sidebar import *
 from inputParse import *
+from circleClass import *
 
 
 def appStarted(app):
@@ -43,11 +44,12 @@ def appStarted(app):
     app.lines.append(Line(app.points, 0, 1, 'a'))
 
     app.polygons = []
-    app.polygonNames = set()
-    app.polygons.append(Polygon('g', app.points, True, 0,1,2,3))
-    app.polygons.append(Polygon('h', app.points, True, 0,1,2))
+    app.polygons.append(Polygon('g', (0,1,2,3)))
+    app.polygons.append(Polygon('h', (0,1,2)))
 
     app.circles = []
+    app.circles.append(Circle('m', 0, 1))
+    app.circles.append(Circle('n', 0, 1, index3 = 2))
 
     app.ellipses = []
 
@@ -158,9 +160,14 @@ def drawPolygons(app, canvas):
     for polygon in app.polygons:
         polygon.drawPolygon(app.board, app, canvas)
 
+def drawCircles(app, canvas):
+    for circle in app.circles:
+        circle.drawCircle(app.board, app, canvas)
+
 def redrawAll(app, canvas):
     app.board.drawBoard(app, canvas)
     drawPolygons(app, canvas)
+    drawCircles(app, canvas)
     drawLines(app, canvas)
     drawPoints(app, canvas)
     app.sidebar.drawSidebar(canvas)
