@@ -7,6 +7,7 @@ from boardClass import *
 from pointClass import *
 from lineClasses import *
 from polygonClasses import *
+from circleClass import *
 
 class Button(object):
     def __init__(self, app, buttonType, buttonObject):
@@ -70,6 +71,27 @@ class Button(object):
         canvas.create_oval(10, startY - 5, 20, startY + 5, fill=color, width=1)
         canvas.create_text(20, startY, 
                             text=f' {polygon.label} : {polyStr}',
+                            anchor = 'w', fill = 'black', font = 'Arial 15 bold')
+
+    def drawCircleButton(self, canvas, startY):
+        if self.isClicked:
+            canvas.create_rectangle(0, startY - 10, self.app.width/10, startY + 10,
+                                    fill = 'grey')
+        circle = self.buttonObject
+        isDrawn = circle.isDrawn
+        color = 'white'
+        if isDrawn: color = 'black'
+
+        label1 = self.app.points[circle.index1].label
+        label2 = self.app.points[circle.index2].label
+        if circle.index3 == None:
+            circleStr = f'Circle({label1}, {label2})'
+        else:
+            label3 = self.app.points[circle.index3].label
+            circleStr = f'Circle({label1}, {label2}, {label3})'
+        canvas.create_oval(10, startY - 5, 20, startY + 5, fill=color, width=1)
+        canvas.create_text(20, startY, 
+                            text=f' {circle.label} : {circleStr}',
                             anchor = 'w', fill = 'black', font = 'Arial 15 bold')
 
 
@@ -163,7 +185,24 @@ class Sidebar(object):
             polygonButton.drawButton(canvas, startY)
         
     def drawCircles(self, canvas):
-        pass
+        startY = self.logoHeight + self.boxHeight/2
+        if self.showPoints:
+            startY += self.boxHeight * len(self.pointButtons)
+        if self.showLines:
+            startY += self.boxHeight * len(self.lineButtons)
+        if self.showPolygons:
+            startY += self.boxHeight * len(self.polygonButtons)
+        startY += 3*self.boxHeight
+
+        headerText = 'Circles v'
+        if self.showPolygons: headerText = 'Circles ^'
+        canvas.create_text(self.width/2, startY, anchor = 'c',
+                           text = headerText, font = 'Arial 20 bold', fill = 'pink')
+
+        if not self.showCircles: return
+        for circleButton in self.circleButtons:
+            startY += self.boxHeight
+            circleButton.drawButton(canvas, startY)
 
     def drawEllipses(self, canvas):
         pass
@@ -233,6 +272,20 @@ class Sidebar(object):
                 return
             else:
                 y -= (len(self.polygonButtons)+1)
+        else: y -= 1
+
+        if y == 0: 
+            self.showCircles = not self.showCircles
+            return
+        if self.showCircles:
+            if y <= len(self.circleButtons):
+                if Point.distance(x, oldY, 15, self.boxHeight/2) <= 5:
+                    self.app.circles[y-1].isDrawn = not self.app.circles[y-1].isDrawn
+                    return
+                self.clickButton('circle', y-1)
+                return
+            else:
+                y -= (len(self.circleButtons)+1)
         else: y -= 1
 
 
