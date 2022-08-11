@@ -7,6 +7,7 @@ from boardClass import *
 from pointClass import *
 from lineClasses import *
 from polygonClasses import *
+from circleClass import *
 from sidebar import *
 
 # TODO fix
@@ -51,7 +52,7 @@ class InputParse(object):
                 raise Exception
         except:
             interior = interior.strip()
-            objectList = self.app.lines + self.app.polygons
+            objectList = self.app.lines + self.app.polygons + self.app.circles
             objectNames = [anyObject.label for anyObject in objectList]
             for index in range(len(objectNames)):
                 objLabel = objectNames[index]

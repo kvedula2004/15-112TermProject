@@ -49,6 +49,21 @@ class Circle(object):
         x1, y1 = points[self.index1].x, points[self.index1].y
         return Point.distance(x1, y1, centerX, centerY)
 
+    def distance(self, app, x, y):
+        centerX, centerY = self.computeCenter(app.points)
+        r = self.computeR(app.points)
+        dist = Point.distance(centerX, centerY, x, y)
+        return abs(dist - r)
+
+    def closestPoint(self, app, x, y):
+        centerX, centerY = self.computeCenter(app.points)
+        r = self.computeR(app.points)
+        dx, dy = x - centerX, y - centerY
+        dist = Point.distance(dx, dy, 0, 0)
+        dx /= (dist/(r+0.0001))
+        dy /= (dist/(r+0.0001))
+        return (centerX + dx, centerY + dy)
+
     def drawCircle(self, board, app, canvas):
         if not self.isDrawn: return
 

@@ -62,4 +62,17 @@ class Polygon(object):
             app.points[index].x += dx
             app.points[index].y += dy
 
+    def computeArea(self, app):
+        xList = [app.points[index].x for index in self.indices]
+        xList.append(app.points[self.indices[0]].x)
+        yList = [app.points[index].y for index in self.indices]
+        yList.append(app.points[self.indices[0]].y)
+
+        LHS, RHS = 0
+        for i in range(len(xList)-1):
+            LHS += yList[i] * xList[i+1]
+            RHS += xList[i] * yList[i+1]
+        return 0.5 * abs(LHS - RHS)
+
+
     
