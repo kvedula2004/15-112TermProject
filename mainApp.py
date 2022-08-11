@@ -10,6 +10,7 @@ from polygonClasses import *
 from sidebar import *
 from inputParse import *
 from circleClass import *
+from ellipseClass import *
 
 
 def appStarted(app):
@@ -57,6 +58,7 @@ def appStarted(app):
     app.circles.append(Circle('n', 0, 1, index3 = 2))
 
     app.ellipses = []
+    app.ellipses.append(Ellipse(app, 0, 1, 2, 'o'))
 
     app.objects = [app.lines, app.polygons, app.circles, app.ellipses]
     app.intersections = [Intersection(app,2,1,2,0), Intersection(app, 0,0,0,1)]
@@ -222,10 +224,15 @@ def drawCircles(app, canvas):
     for circle in app.circles:
         circle.drawCircle(app.board, app, canvas)
 
+def drawEllipses(app, canvas):
+    for ellipse in app.ellipses:
+        ellipse.drawEllipse(canvas)
+
 def redrawAll(app, canvas):
     app.board.drawBoard(app, canvas)
     drawPolygons(app, canvas)
     drawCircles(app, canvas)
+    drawEllipses(app, canvas)
     drawLines(app, canvas)
     drawPoints(app, canvas)
     app.sidebar.drawSidebar(canvas)
