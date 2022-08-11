@@ -18,12 +18,12 @@ class Polygon(object):
         if not self.isDrawn: return
         for i in range(len(self.indices)):
             if i < len(self.indices) - 1:
-                ls = LineSegment(app.points, self.indices[i], self.indices[i+1],'')
+                ls = LineSegment(app, self.indices[i], self.indices[i+1],'')
                 ls.drawLineSegment(board, app, canvas)
             else:
-                ls = LineSegment(app.points, self.indices[i], self.indices[0],'')
+                ls = LineSegment(app, self.indices[i], self.indices[0],'')
                 ls.drawLineSegment(board, app, canvas)
-        ptVtxList = tuple(app.points[self.indices[i]] for i in range(len(self.indices)))
+        ptVtxList = tuple(app.allPoints[self.indices[i]] for i in range(len(self.indices)))
         pixelVtxList = tuple(board.convertPointToPixel(app, pt.x, pt.y)
                              for pt in ptVtxList)
         canvas.create_polygon(pixelVtxList, width = 0, fill = 'pink')
@@ -33,10 +33,10 @@ class Polygon(object):
         minDist = None
         for i in range(len(self.indices)):
             if i < len(self.indices) - 1:
-                ls = LineSegment(app.points, self.indices[i], self.indices[i+1],
+                ls = LineSegment(app, self.indices[i], self.indices[i+1],
                                  label = '')
             else:
-                ls = LineSegment(app.points, self.indices[i], self.indices[0],
+                ls = LineSegment(app, self.indices[i], self.indices[0],
                                  label = '')
             if minDist == None or ls.distance(app, x,y) < minDist:
                 minDist = ls.distance(app, x,y)
@@ -47,10 +47,10 @@ class Polygon(object):
         minDist = None
         for i in range(len(self.indices)):
             if i < len(self.indices) - 1:
-                ls = LineSegment(app.points, self.indices[i], self.indices[i+1],
+                ls = LineSegment(app, self.indices[i], self.indices[i+1],
                                  label = '')
             else:
-                ls = LineSegment(app.points, self.indices[i], self.indices[0],
+                ls = LineSegment(app, self.indices[i], self.indices[0],
                                  label = '')
             if minDist == None or ls.distance(app, x, y) < minDist:
                 minDist = ls.distance(app, x, y)
@@ -59,14 +59,14 @@ class Polygon(object):
 
     def movePolygon(self, app, dx, dy):
         for index in self.indices:
-            app.points[index].x += dx
-            app.points[index].y += dy
+            app.allPoints[index].x += dx
+            app.allPoints[index].y += dy
 
     def computeArea(self, app):
-        xList = [app.points[index].x for index in self.indices]
-        xList.append(app.points[self.indices[0]].x)
-        yList = [app.points[index].y for index in self.indices]
-        yList.append(app.points[self.indices[0]].y)
+        xList = [app.allPoints[index].x for index in self.indices]
+        xList.append(app.allPoints[self.indices[0]].x)
+        yList = [app.allPoints[index].y for index in self.indices]
+        yList.append(app.allPoints[self.indices[0]].y)
 
         LHS, RHS = 0
         for i in range(len(xList)-1):

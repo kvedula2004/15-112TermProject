@@ -53,7 +53,7 @@ class Button(object):
 
         canvas.create_oval(10, startY - 5, 20, startY + 5, fill=color, width=1)
         canvas.create_text(20, startY, 
-                            text=f' {line.label} : Line({line.points[line.index1].label}, {line.points[line.index2].label})',
+                            text=f' {line.label} : Line({line.app.allPoints[line.index1].label}, {line.app.allPoints[line.index2].label})',
                             anchor = 'w', fill = 'black', font = 'Arial 15 bold')
 
     def drawPolygonButton(self, canvas, startY):

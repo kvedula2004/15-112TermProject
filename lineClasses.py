@@ -7,11 +7,11 @@ from boardClass import *
 from pointClass import *
 
 class Line(object):
-    def __init__(self, points, index1, index2, label, isDrawn = True):
-        self.points = points
+    def __init__(self, app, index1, index2, label, isDrawn = True):
+        self.app = app
         self.index1, self.index2 = index1, index2
-        point1 = points[index1]
-        point2 = points[index2]
+        point1 = app.allPoints[index1]
+        point2 = app.allPoints[index2]
         self.label = label
         self.isDrawn = isDrawn
         self.label_dx = -0.5
@@ -21,7 +21,7 @@ class Line(object):
     
     # computes distance between point and line
     def distance(self, app, x, y):
-        point1, point2 = self.points[self.index1], self.points[self.index2]
+        point1, point2 = self.app.allPoints[self.index1], self.app.allPoints[self.index2]
         if point1.x == point2.x:
             return abs(x - point1.x)
         if point1.y == point2.y:
@@ -37,7 +37,7 @@ class Line(object):
 
     # computes the coordinates of closest point on line wrt to a given point
     def closestPoint(self, app, x, y):
-        point1, point2 = self.points[self.index1], self.points[self.index2]
+        point1, point2 = self.app.allPoints[self.index1], self.app.allPoints[self.index2]
         if point1.x == point2.x:
             return (point1.x, y)
         if point1.y == point2.y:
@@ -55,7 +55,7 @@ class Line(object):
     # ! View method (draw line)
 
     def drawLine(self, board, app, canvas):
-        point1, point2 = self.points[self.index1], self.points[self.index2]
+        point1, point2 = app.allPoints[self.index1], app.allPoints[self.index2]
         if not self.isDrawn: return
 
         lineWidth = 2.5
@@ -112,8 +112,8 @@ class Line(object):
 
 
 class LineSegment(Line):
-    def __init__(self, points, index1, index2, label, isDrawn = True):
-        super().__init__(points, index1, index2, label, isDrawn)
+    def __init__(self, app, index1, index2, label, isDrawn = True):
+        super().__init__(app, index1, index2, label, isDrawn)
 
     # computes distance between linesegment and point
     def distance(self, app, x, y):
@@ -123,7 +123,7 @@ class LineSegment(Line):
     # computes the coordinates of the closest point
     def closestPoint(self, app, x, y):
         pt1 = super().closestPoint(app, x, y)
-        point1, point2 = self.points[self.index1], self.points[self.index2]
+        point1, point2 = self.app.allPoints[self.index1], self.app.allPoints[self.index2]
         
         distA = Point.distance(pt1[0],pt1[1], point1.x, point1.y)
         distB = Point.distance(pt1[0],pt1[1], point2.x, point2.y)
@@ -139,7 +139,7 @@ class LineSegment(Line):
 
     # draws the line segment
     def drawLineSegment(self, board, app, canvas):
-        point1, point2 = self.points[self.index1], self.points[self.index2]
+        point1, point2 = self.app.allPoints[self.index1], self.app.allPoints[self.index2]
 
         pixel1 = board.convertPointToPixel(app, point1.x, point1.y)
         pixel2 = board.convertPointToPixel(app, point2.x, point2.y)

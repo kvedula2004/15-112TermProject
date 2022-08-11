@@ -35,8 +35,8 @@ class InputParse(object):
             if len(newInterior) == 2:
                 if self.checkIntFloat(newInterior[0]) and self.checkIntFloat(newInterior[1]):
                     x, y = eval(newInterior[0]), eval(newInterior[1])
-                    self.app.points.append(Point(self.app, x, y))
-                    self.app.pointNames.add(self.app.points[-1].label)
+                    self.app.allPoints.append(Point(self.app, x, y))
+                    self.app.pointNames.add(self.app.allPoints[-1].label)
                 else:
                     self.output = 'Not valid point coordinates.'
             elif len(newInterior) == 3:
@@ -46,8 +46,8 @@ class InputParse(object):
                     self.output = 'Duplicate label.'
                 else:
                     x, y = eval(newInterior[0]), eval(newInterior[1])
-                    self.app.points.append(Point(self.app, x, y, newInterior[2]))
-                    self.app.pointNames.add(self.app.points[-1].label)
+                    self.app.allPoints.append(Point(self.app, x, y, newInterior[2]))
+                    self.app.pointNames.add(self.app.allPoints[-1].label)
             else:
                 raise Exception
         except:
@@ -57,8 +57,8 @@ class InputParse(object):
             for index in range(len(objectNames)):
                 objLabel = objectNames[index]
                 if interior == objLabel:
-                    self.app.points.append(Point(self.app,0,0,'',objectList[index]))
-                    self.app.pointNames.add(self.app.points[-1].label)
+                    self.app.allPoints.append(Point(self.app,0,0,'',objectList[index]))
+                    self.app.pointNames.add(self.app.allPoints[-1].label)
                     return
             self.output = 'Not valid object.'
 
@@ -77,11 +77,11 @@ class InputParse(object):
             label = self.app.defaultObjNames[self.app.currObjIndex]
             self.app.currObjIndex += 1
             index1, index2 = 0, 0
-            for i in range(len(self.app.points)):
-                point = self.app.points[i]
+            for i in range(len(self.app.allPoints)):
+                point = self.app.allPoints[i]
                 if point.label == pt1: index1 = i
                 if point.label == pt2: index2 = i
-            self.app.lines.append(Line(self.app.points, index1, index2, label))
+            self.app.lines.append(Line(self.app, index1, index2, label))
         except:
             self.output = 'Not valid object.'
 
@@ -98,8 +98,8 @@ class InputParse(object):
             polyLabel = self.app.defaultObjNames[self.app.currObjIndex]
             self.app.currObjIndex += 1
             labelIndices = [-1 for i in range(len(newInterior))]
-            for i in range(len(self.app.points)):
-                label = self.app.points[i].label
+            for i in range(len(self.app.allPoints)):
+                label = self.app.allPoints[i].label
                 for j in range(len(newInterior)):
                     if newInterior[j] == label:
                         labelIndices[j] = i
@@ -121,8 +121,8 @@ class InputParse(object):
             circleLabel = self.app.defaultObjNames[self.app.currObjIndex]
             self.app.currObjIndex += 1
             labelIndices = [-1, -1, -1]
-            for i in range(len(self.app.points)):
-                label = self.app.points[i].label
+            for i in range(len(self.app.allPoints)):
+                label = self.app.allPoints[i].label
                 for j in range(len(newInterior)):
                     if newInterior[j] == label:
                         labelIndices[j] = i
@@ -143,7 +143,7 @@ class InputParse(object):
     #         if len(newInterior) != 2:
     #             self.output = 'Exactly 2 objects needed for intersection.'
     #             return
-    #         for 
+    #         for obj in self.app.objects
 
     def parseInput(self):
         if self.input == None:

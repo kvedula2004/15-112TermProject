@@ -39,11 +39,14 @@ def appStarted(app):
     app.points.append(Point(app, 7,15))
     app.pointNames.add(app.points[3].label)
     
+    app.intersections = []
+    app.allPoints = []
+    updateAllPoints(app)
 
     app.lines = []
     app.defaultObjNames = [ptName.lower() for ptName in app.defaultNames]
     app.currObjIndex = 10
-    app.lines.append(Line(app.points, 0, 1, 'a'))
+    app.lines.append(Line(app, 0, 1, 'a'))
 
     app.polygons = []
     app.polygons.append(Polygon('g', (0,1,2,3)))
@@ -149,6 +152,8 @@ def labelDragging(app, event, index):
 
 def mouseDragged(app, event):
     # does the necessary draggings of board,label,point
+    updateAllPoints(app)
+    app.sidebar.__init__(app)
     app.lastActions.pop(0)
     app.lastActions.append(1)
     (minIndex, isLabelMin) = closestObject(app, event)
@@ -165,8 +170,6 @@ def mouseDragged(app, event):
     
 def timerFired(app):
     # clears up the queue of past dragging history (1 = drag, 0 = not drag)
-    updateAllPoints(app)
-    app.sidebar.__init__(app)
     app.lastActions.pop(0)
     app.lastActions.append(0)
     if app.lastActions == [0] * 10:

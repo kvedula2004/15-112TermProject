@@ -50,14 +50,14 @@ class Circle(object):
         return Point.distance(x1, y1, centerX, centerY)
 
     def distance(self, app, x, y):
-        centerX, centerY = self.computeCenter(app.points)
-        r = self.computeR(app.points)
+        centerX, centerY = self.computeCenter(app.allPoints)
+        r = self.computeR(app.allPoints)
         dist = Point.distance(centerX, centerY, x, y)
         return abs(dist - r)
 
     def closestPoint(self, app, x, y):
-        centerX, centerY = self.computeCenter(app.points)
-        r = self.computeR(app.points)
+        centerX, centerY = self.computeCenter(app.allPoints)
+        r = self.computeR(app.allPoints)
         dx, dy = x - centerX, y - centerY
         dist = Point.distance(dx, dy, 0, 0)
         dx /= (dist/(r+0.0001))
@@ -67,8 +67,8 @@ class Circle(object):
     def drawCircle(self, board, app, canvas):
         if not self.isDrawn: return
 
-        centerX, centerY = self.computeCenter(app.points)
-        r = self.computeR(app.points)
+        centerX, centerY = self.computeCenter(app.allPoints)
+        r = self.computeR(app.allPoints)
         pixelR = r * board.gridLineSpace
         pixelX, pixelY = board.convertPointToPixel(app, centerX, centerY)
         canvas.create_oval(pixelX-pixelR,pixelY-pixelR, pixelX+pixelR, pixelY+pixelR,
