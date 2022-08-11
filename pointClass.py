@@ -4,6 +4,7 @@
 
 from cmu_112_graphics import *
 from boardClass import *
+import math
 
 class Point(object):
     def __init__(self, app, xCoord, yCoord, pointName = '', 
@@ -75,5 +76,77 @@ class Point(object):
         canvas.create_text(labelPixelX, labelPixelY, text = self.label,
                            fill = 'green', font = 'Arial 15 bold')
     
+class Intersection(Point):
+    def __init__(self, app, index1, index2, index3, index4):
+        self.app = app
+        self.obj1Type = app.objects[index1]
+        self.obj2Type = app.objects[index3]
+        self.obj1 = app.objects[index1][index2]
+        self.obj2 = app.objects[index3][index4]
+        self.allIntersections = []
+        self.labels = []
+
+    def computeBestDir(self, obj1, obj2, r, currX, currY):
+        thetas = set(i * math.pi / 10 for i in range(20))
+        minDist, bestdx, bestdy = None, None, None
+        for theta in thetas:
+            dx, dy = r*math.cos(theta), r*math.sin(theta)
+            candidateX, candidateY = currX + dx, currY + dy
+            candidateDist = obj1.distance(self.app, candidateX, candidateY)
+            candidateDist += obj2.distance(self.app, candidateX, candidateY)
+            if minDist == None or candidateDist < minDist:
+                minDist = candidateDist
+                bestdx, bestdy = dx, dy
+        return (bestdx, bestdy)
+            
+
+    def computeIntersectStart(self, obj1, obj2, numIter, startX, startY):
+        r1, r2, r3 = 5, 0.5, 0.01
+        currX, currY = startX, startY
+        for i in range(numIter):
+            dx, dy = self.computeBestDir(obj1, obj2, r1, currX, currY)
+            currX += dx
+            currY += dy
+        for i in range(numIter):
+            dx, dy = self.computeBestDir(obj1, obj2, r2, currX, currY)
+            currX += dx
+            currY += dy
+        for i in range(numIter):
+            dx, dy = self.computeBestDir(obj1, obj2, r3, currX, currY)
+            currX += dx
+            currY += dy
+        return (currX, currY)
+
+    def computeAllIntersections(self, obj1, obj2, numIter):
+        allIntersections = []
+        for xVal in [0, 100, -100]:
+            for yVal in [0, 100, -100]:
+                if xVal == 0 and yVal == 0:
+                    continue
+                newInter = self.computeIntersectStart(obj1, obj2, numIter, xVal, yVal)
+                isNewInter = True
+                for elem in allIntersections:
+                    if Point.distance(newInter[0], newInter[1], elem[0], elem[1]) < 1:
+                        isNewInter = False
+                if isNewInter:
+                    allIntersections.append(newInter)
+        return allIntersections
+
+    def updateIntersection(self):
+        for label in self.labels:
+            self.app.pointNames.remove(label)
+        self.allIntersections = self.computeAllIntersections(self.obj1, self.obj2, 40)
+        labels = [-1 for i in self.allIntersections]
+        startIndex = 0
+        for i in range(len(labels)):
+            while self.app.defaultNames[startIndex] in self.app.pointNames:
+                startIndex += 1
+            labels[i] = self.app.defaultNames[startIndex]
+            startIndex += 1
+        self.labels = labels
+        for label in self.labels:
+            self.app.pointNames.add(label)
+
+        
 
     

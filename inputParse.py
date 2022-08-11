@@ -10,12 +10,12 @@ from polygonClasses import *
 from circleClass import *
 from sidebar import *
 
-# TODO fix
 class InputParse(object):
     def __init__(self, app, input):
         self.input = input
         self.app = app
         self.output = ''
+
 
     @staticmethod
     def checkIntFloat(num):
@@ -133,6 +133,17 @@ class InputParse(object):
                                                index3=labelIndices[2]))
         except:
             self.output = 'Not valid object.'
+            
+    # def createIntersections(self):
+    #     # 'Intersect(...)' to '...'
+    #     interior = self.input[11:-1]
+    #     try:
+    #         newInterior = tuple(interior.split(','))
+    #         newInterior = [elem.strip() for elem in newInterior]
+    #         if len(newInterior) != 2:
+    #             self.output = 'Exactly 2 objects needed for intersection.'
+    #             return
+    #         for 
 
     def parseInput(self):
         if self.input == None:

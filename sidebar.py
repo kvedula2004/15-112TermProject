@@ -67,7 +67,7 @@ class Button(object):
 
         polyStr = ''
         for index in polygon.indices:
-            polyStr += self.app.points[index].label
+            polyStr += self.app.allPoints[index].label
         canvas.create_oval(10, startY - 5, 20, startY + 5, fill=color, width=1)
         canvas.create_text(20, startY, 
                             text=f' {polygon.label} : {polyStr}',
@@ -82,12 +82,12 @@ class Button(object):
         color = 'white'
         if isDrawn: color = 'black'
 
-        label1 = self.app.points[circle.index1].label
-        label2 = self.app.points[circle.index2].label
+        label1 = self.app.allPoints[circle.index1].label
+        label2 = self.app.allPoints[circle.index2].label
         if circle.index3 == None:
             circleStr = f'Circle({label1}, {label2})'
         else:
-            label3 = self.app.points[circle.index3].label
+            label3 = self.app.allPoints[circle.index3].label
             circleStr = f'Circle({label1}, {label2}, {label3})'
         canvas.create_oval(10, startY - 5, 20, startY + 5, fill=color, width=1)
         canvas.create_text(20, startY, 
@@ -115,7 +115,7 @@ class Sidebar(object):
 
         self.boxHeight = app.height/40
 
-        self.pointButtons, self.showPoints = [Button(app, 'point', point) for point in app.points], True
+        self.pointButtons, self.showPoints = [Button(app, 'point', point) for point in app.allPoints], True
         self.lineButtons, self.showLines = [Button(app, 'line', line) for line in app.lines], True
         self.polygonButtons, self.showPolygons = [Button(app, 'polygon', polygon) for polygon in app.polygons], True
         self.circleButtons, self.showCircles = [Button(app, 'circle', circle) for circle in app.circles], True
@@ -238,7 +238,7 @@ class Sidebar(object):
         if self.showPoints:
             if y <= len(self.pointButtons):
                 if Point.distance(x, oldY, 15, self.boxHeight/2) <= 5:
-                    self.app.points[y-1].isDrawn = not self.app.points[y-1].isDrawn
+                    self.app.allPoints[y-1].isDrawn = not self.app.allPoints[y-1].isDrawn
                     return
                 self.clickButton('point', y-1)
                 return

@@ -117,11 +117,8 @@ class LineSegment(Line):
 
     # computes distance between linesegment and point
     def distance(self, app, x, y):
-        point1, point2 = self.points[self.index1], self.points[self.index2]
-        dist1 = super().distance(app, x, y)
-        dist2 = Point.distance(point1.x, point1.y, x, y)
-        dist3 = Point.distance(point2.x, point2.y, x, y)
-        return min(dist1, dist2, dist3)
+        closestPt = self.closestPoint(app, x, y)
+        return Point.distance(closestPt[0], closestPt[1], x, y)
 
     # computes the coordinates of the closest point
     def closestPoint(self, app, x, y):

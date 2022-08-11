@@ -10,6 +10,7 @@ from polygonClasses import *
 from sidebar import *
 from inputParse import *
 from circleClass import *
+import copy
 
 
 def appStarted(app):
@@ -54,8 +55,24 @@ def appStarted(app):
 
     app.ellipses = []
 
+    app.objects = [app.lines, app.polygons, app.circles, app.ellipses]
+    app.intersections = [Intersection(app,2,1,2,0)]
+    app.allPoints = []
+    updateAllPoints(app)
+
     app.sidebar = Sidebar(app)
     app.inputParse = InputParse(app, '')
+
+def updateAllPoints(app):
+    app.allPoints = [] + app.points
+    for intersection in app.intersections:
+        intersection.updateIntersection()
+        app.allPoints = app.allPoints + [1 for i in range(len(intersection.labels))]
+        for i in range(len(intersection.labels)):
+            app.allPoints[len(app.points)+i] = Point(app, intersection.allIntersections[i][0],
+                                                     intersection.allIntersections[i][1],
+                                                     intersection.labels[i],
+                                                     canMove = False)
     
     
 # computes the closest object among points, point labels
@@ -137,7 +154,7 @@ def mouseDragged(app, event):
     (minIndex, isLabelMin) = closestObject(app, event)
     polyDist = closestPolygon(app, event)[1]
     if minIndex == -1:
-        if polyDist < 10:
+        if polyDist < 2:
             polygonDragging(app, event)
         else:
             boardDragging(app, event)
@@ -148,6 +165,8 @@ def mouseDragged(app, event):
     
 def timerFired(app):
     # clears up the queue of past dragging history (1 = drag, 0 = not drag)
+    updateAllPoints(app)
+    app.sidebar.__init__(app)
     app.lastActions.pop(0)
     app.lastActions.append(0)
     if app.lastActions == [0] * 10:
@@ -177,7 +196,7 @@ def mousePressed(app, event):
 
 # draws all points in app.points
 def drawPoints(app, canvas):
-    for point in app.points:
+    for point in app.allPoints:
         point.movePoint(point.x, point.y)
         point.drawPoint(app.board, app, canvas)
  
