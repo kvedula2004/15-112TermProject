@@ -35,8 +35,8 @@ class InputParse(object):
             if len(newInterior) == 2:
                 if self.checkIntFloat(newInterior[0]) and self.checkIntFloat(newInterior[1]):
                     x, y = eval(newInterior[0]), eval(newInterior[1])
-                    self.app.allPoints.append(Point(self.app, x, y))
-                    self.app.pointNames.add(self.app.allPoints[-1].label)
+                    self.app.points.append(Point(self.app, x, y))
+                    self.app.pointNames.add(self.app.points[-1].label)
                 else:
                     self.output = 'Not valid point coordinates.'
             elif len(newInterior) == 3:
@@ -46,8 +46,8 @@ class InputParse(object):
                     self.output = 'Duplicate label.'
                 else:
                     x, y = eval(newInterior[0]), eval(newInterior[1])
-                    self.app.allPoints.append(Point(self.app, x, y, newInterior[2]))
-                    self.app.pointNames.add(self.app.allPoints[-1].label)
+                    self.app.points.append(Point(self.app, x, y, pointName=newInterior[2]))
+                    self.app.pointNames.add(newInterior[2])
             else:
                 raise Exception
         except:
@@ -57,7 +57,7 @@ class InputParse(object):
             for index in range(len(objectNames)):
                 objLabel = objectNames[index]
                 if interior == objLabel:
-                    self.app.allPoints.append(Point(self.app,0,0,'',objectList[index]))
+                    self.app.allPoints.append(Point(self.app,0,0,pointName='',currObject=objectList[index]))
                     self.app.pointNames.add(self.app.allPoints[-1].label)
                     return
             self.output = 'Not valid object.'
@@ -159,6 +159,15 @@ class InputParse(object):
             self.app.intersections.append(Intersection(self.app,obj1Type,obj1Index,obj2Type,obj2Index))
         except:
             self.output = 'Not valid intersection.'
+    
+    def getArea(self):
+        # 'Area(...)' to '...'
+        interior = self.input[5:-1]
+        for poly in self.app.polygons:
+            if poly.label == interior:
+                self.output = f'Area is {poly.computeArea(self.app):.2f}.'
+                return
+        self.output = 'Not valid polygon.'
         
 
     def parseInput(self):
@@ -174,6 +183,8 @@ class InputParse(object):
             self.createCircle()
         elif self.input.startswith('Intersect'):
             self.createIntersection()
+        elif self.input.startswith('Area'):
+            self.getArea()
         else:
             self.output = 'Not valid input.'
 

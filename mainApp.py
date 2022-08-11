@@ -10,7 +10,6 @@ from polygonClasses import *
 from sidebar import *
 from inputParse import *
 from circleClass import *
-import copy
 
 
 def appStarted(app):
@@ -63,14 +62,14 @@ def appStarted(app):
     app.intersections = [Intersection(app,2,1,2,0), Intersection(app, 0,0,0,1)]
     updateAllPoints(app)
 
-    
-
     app.sidebar = Sidebar(app)
     app.inputParse = InputParse(app, '')
 
 def updateAllPoints(app):
+    #oldHiddenStatus
     app.allPoints = [] + app.points
     for intersection in app.intersections:
+        #oldHiddenStatus = [pt]
         intersection.updateIntersection()
         ogLen = len(app.allPoints)
         app.allPoints.extend([1 for i in range(len(intersection.labels))])
@@ -86,8 +85,8 @@ def closestObject(app, event):
     minDist = None
     minIndex = -1
     isLabelMin = False
-    for index in range(len(app.points)):
-        point = app.points[index]
+    for index in range(len(app.allPoints)):
+        point = app.allPoints[index]
         labelX = point.x + point.label_dx
         labelY = point.y + point.label_dy
         (newEventX, newEventY) = app.board.getPointFromPixel(app, event.x, event.y)
@@ -146,16 +145,15 @@ def polygonDragging(app, event):
 # moves point to mouse coordinates
 def pointDragging(app, event, index):
     newEventX, newEventY = app.board.getPointFromPixel(app, event.x, event.y)
-    app.points[index].movePoint(newEventX, newEventY)
+    app.allPoints[index].movePoint(newEventX, newEventY)
 
 # moves (point) label to mouse coordinates
 def labelDragging(app, event, index):
     newEventX, newEventY = app.board.getPointFromPixel(app, event.x, event.y)
-    app.points[index].moveLabel(newEventX, newEventY)
+    app.allPoints[index].moveLabel(newEventX, newEventY)
 
 def mouseDragged(app, event):
     # does the necessary draggings of board,label,point
-    app.sidebar.__init__(app)
     app.lastActions.pop(0)
     app.lastActions.append(1)
     (minIndex, isLabelMin) = closestObject(app, event)
@@ -173,6 +171,7 @@ def mouseDragged(app, event):
 def timerFired(app):
     # clears up the queue of past dragging history (1 = drag, 0 = not drag)
     updateAllPoints(app)
+    app.sidebar.__init__(app)
     app.lastActions.pop(0)
     app.lastActions.append(0)
     if app.lastActions == [0] * 10:

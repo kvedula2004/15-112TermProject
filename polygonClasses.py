@@ -68,7 +68,7 @@ class Polygon(object):
         yList = [app.allPoints[index].y for index in self.indices]
         yList.append(app.allPoints[self.indices[0]].y)
 
-        LHS, RHS = 0
+        LHS, RHS = 0, 0
         for i in range(len(xList)-1):
             LHS += yList[i] * xList[i+1]
             RHS += xList[i] * yList[i+1]

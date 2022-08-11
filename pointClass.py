@@ -1,5 +1,5 @@
 #################################################
-# # Point class 
+# # Point and Intersection class 
 #################################################
 
 from cmu_112_graphics import *
@@ -76,7 +76,7 @@ class Point(object):
         canvas.create_text(labelPixelX, labelPixelY, text = self.label,
                            fill = 'green', font = 'Arial 15 bold')
     
-class Intersection(Point):
+class Intersection(object):
     def __init__(self, app, index1, index2, index3, index4):
         self.app = app
         self.obj1Type = app.objects[index1]
