@@ -47,6 +47,7 @@ def appStarted(app):
     app.defaultObjNames = [ptName.lower() for ptName in app.defaultNames]
     app.currObjIndex = 10
     app.lines.append(Line(app, 0, 1, 'a'))
+    app.lines.append(Line(app, 2, 3, 'b'))
 
     app.polygons = []
     app.polygons.append(Polygon('g', (0,1,2,3)))
@@ -59,9 +60,10 @@ def appStarted(app):
     app.ellipses = []
 
     app.objects = [app.lines, app.polygons, app.circles, app.ellipses]
-    app.intersections = [Intersection(app,2,1,2,0)]
-    app.allPoints = []
+    app.intersections = [Intersection(app,2,1,2,0), Intersection(app, 0,0,0,1)]
     updateAllPoints(app)
+
+    
 
     app.sidebar = Sidebar(app)
     app.inputParse = InputParse(app, '')
@@ -70,9 +72,10 @@ def updateAllPoints(app):
     app.allPoints = [] + app.points
     for intersection in app.intersections:
         intersection.updateIntersection()
-        app.allPoints = app.allPoints + [1 for i in range(len(intersection.labels))]
+        ogLen = len(app.allPoints)
+        app.allPoints.extend([1 for i in range(len(intersection.labels))])
         for i in range(len(intersection.labels)):
-            app.allPoints[len(app.points)+i] = Point(app, intersection.allIntersections[i][0],
+            app.allPoints[ogLen+i] = Point(app, intersection.allIntersections[i][0],
                                                      intersection.allIntersections[i][1],
                                                      intersection.labels[i],
                                                      canMove = False)
@@ -152,7 +155,6 @@ def labelDragging(app, event, index):
 
 def mouseDragged(app, event):
     # does the necessary draggings of board,label,point
-    updateAllPoints(app)
     app.sidebar.__init__(app)
     app.lastActions.pop(0)
     app.lastActions.append(1)
@@ -170,6 +172,7 @@ def mouseDragged(app, event):
     
 def timerFired(app):
     # clears up the queue of past dragging history (1 = drag, 0 = not drag)
+    updateAllPoints(app)
     app.lastActions.pop(0)
     app.lastActions.append(0)
     if app.lastActions == [0] * 10:

@@ -134,16 +134,32 @@ class InputParse(object):
         except:
             self.output = 'Not valid object.'
             
-    # def createIntersections(self):
-    #     # 'Intersect(...)' to '...'
-    #     interior = self.input[11:-1]
-    #     try:
-    #         newInterior = tuple(interior.split(','))
-    #         newInterior = [elem.strip() for elem in newInterior]
-    #         if len(newInterior) != 2:
-    #             self.output = 'Exactly 2 objects needed for intersection.'
-    #             return
-    #         for obj in self.app.objects
+    def createIntersection(self):
+        # 'Intersect(...)' to '...'
+        interior = self.input[10:-1]
+        try:
+            newInterior = tuple(interior.split(','))
+            newInterior = [elem.strip() for elem in newInterior]
+            if len(newInterior) != 2:
+                self.output = 'Exactly 2 objects needed for intersection.'
+                return
+            obj1Type, obj1Index, obj2Type, obj2Index = -1, -1, -1, -1
+            for i in range(len(self.app.objects)):
+                for j in range(len(self.app.objects[i])):
+                    if self.app.objects[i][j].label == newInterior[0]:
+                        obj1Type, obj1Index = i, j
+                    if self.app.objects[i][j].label == newInterior[1]:
+                        obj2Type, obj2Index = i, j
+            if obj1Type == -1 or obj1Index == -1 or obj2Type == -1 or obj2Index == -1:
+                self.output = 'Not valid objects.'
+                return
+            if obj1Type == obj2Type and obj1Index == obj2Index:
+                self.output = 'Cannot intersect an object with itself.'
+                return
+            self.app.intersections.append(Intersection(self.app,obj1Type,obj1Index,obj2Type,obj2Index))
+        except:
+            self.output = 'Not valid intersection.'
+        
 
     def parseInput(self):
         if self.input == None:
@@ -156,6 +172,8 @@ class InputParse(object):
             self.createPolygon()
         elif self.input.startswith('Circle'):
             self.createCircle()
+        elif self.input.startswith('Intersect'):
+            self.createIntersection()
         else:
             self.output = 'Not valid input.'
 
