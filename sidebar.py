@@ -94,6 +94,24 @@ class Button(object):
                             text=f' {circle.label} : {circleStr}',
                             anchor = 'w', fill = 'black', font = 'Arial 15 bold')
 
+    def drawEllipseButton(self, canvas, startY):
+        if self.isClicked:
+            canvas.create_rectangle(0, startY - 10, self.app.width/10, startY + 10,
+                                    fill = 'grey')
+        ellipse = self.buttonObject
+        isDrawn = ellipse.isDrawn
+        color = 'white'
+        if isDrawn: color = 'black'
+
+        label1 = self.app.allPoints[ellipse.focusIdx1].label
+        label2 = self.app.allPoints[ellipse.focusIdx2].label
+        label3 = self.app.allPoints[ellipse.borderIdx].label
+        ellipseStr = f'Circle({label1}, {label2}, {label3})'
+        canvas.create_oval(10, startY - 5, 20, startY + 5, fill=color, width=1)
+        canvas.create_text(20, startY, 
+                            text=f' {ellipse.label} : {ellipseStr}',
+                            anchor = 'w', fill = 'black', font = 'Arial 15 bold')
+
 
 #################################################
 # #  Sidebar
@@ -205,7 +223,26 @@ class Sidebar(object):
             circleButton.drawButton(canvas, startY)
 
     def drawEllipses(self, canvas):
-        pass
+        startY = self.logoHeight + self.boxHeight/2
+        if self.showPoints:
+            startY += self.boxHeight * len(self.pointButtons)
+        if self.showLines:
+            startY += self.boxHeight * len(self.lineButtons)
+        if self.showPolygons:
+            startY += self.boxHeight * len(self.polygonButtons)
+        if self.showCircles:
+            startY += self.boxHeight * len(self.circleButtons)
+        startY += 4*self.boxHeight
+
+        headerText = 'Ellipses v'
+        if self.showPolygons: headerText = 'Ellipses ^'
+        canvas.create_text(self.width/2, startY, anchor = 'c',
+                           text = headerText, font = 'Arial 20 bold', fill = 'pink')
+
+        if not self.showEllipses: return
+        for ellipseButton in self.ellipseButtons:
+            startY += self.boxHeight
+            ellipseButton.drawButton(canvas, startY)
 
     def translateToButton(self, s):
         if s == 'point': return self.pointButtons
@@ -286,6 +323,20 @@ class Sidebar(object):
                 return
             else:
                 y -= (len(self.circleButtons)+1)
+        else: y -= 1
+
+        if y == 0: 
+            self.showEllipses = not self.showEllipses
+            return
+        if self.showEllipses:
+            if y <= len(self.ellipseButtons):
+                if Point.distance(x, oldY, 15, self.boxHeight/2) <= 5:
+                    self.app.ellipses[y-1].isDrawn = not self.app.ellipses[y-1].isDrawn
+                    return
+                self.clickButton('ellipse', y-1)
+                return
+            else:
+                y -= (len(self.ellipseButtons)+1)
         else: y -= 1
 
 

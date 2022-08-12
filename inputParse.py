@@ -8,6 +8,7 @@ from pointClass import *
 from lineClasses import *
 from polygonClasses import *
 from circleClass import *
+from ellipseClass import *
 from sidebar import *
 
 class InputParse(object):
@@ -168,7 +169,28 @@ class InputParse(object):
                 self.output = f'Area is {poly.computeArea(self.app):.2f}.'
                 return
         self.output = 'Not valid polygon.'
-        
+
+    def createEllipse(self):
+        # 'Ellipse(...)' to '...'
+        interior = self.input[8:-1]
+        try:
+            newInterior = tuple(interior.split(','))
+            newInterior = [elem.strip() for elem in newInterior]
+            for ptLabel in newInterior:
+                if ptLabel not in self.app.pointNames:
+                    raise Exception
+            if len(newInterior) != 3: raise Exception
+            ellipseLabel = self.app.defaultObjNames[self.app.currObjIndex]
+            self.app.currObjIndex += 1
+            labelIndices = [-1, -1, -1]
+            for i in range(len(self.app.allPoints)):
+                label = self.app.allPoints[i].label
+                for j in range(len(newInterior)):
+                    if newInterior[j] == label:
+                        labelIndices[j] = i
+            self.app.ellipses.append(Ellipse(self.app, labelIndices[0], labelIndices[1], labelIndices[2], label))
+        except:
+            self.output = 'Not valid ellipse.'
 
     def parseInput(self):
         if self.input == None:
@@ -185,6 +207,8 @@ class InputParse(object):
             self.createIntersection()
         elif self.input.startswith('Area'):
             self.getArea()
+        elif self.input.startswith('Ellipse'):
+            self.createEllipse()
         else:
             self.output = 'Not valid input.'
 

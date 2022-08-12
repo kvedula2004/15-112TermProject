@@ -54,6 +54,7 @@ class Ellipse(object):
         return (min(y1,y2), max(y1,y2))
     
     def drawEllipse(self, canvas):
+        if not self.isDrawn: return
         startX, endX = self.xInterval()[0]+0.001, self.xInterval()[1]-0.001
         step = 0.1
         prevLowPixel = None
