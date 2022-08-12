@@ -131,6 +131,18 @@ class Intersection(object):
                     continue
                 newInter = self.computeIntersectStart(obj1, obj2, numIter, xVal, yVal)
                 isNewInter = True
+                try:
+                    if obj1.fastDist(self.app, newInter[0], newInter[1]) > 0.5:
+                        isNewInter = False
+                except:
+                    if obj1.distance(self.app, newInter[0], newInter[1]) > 0.5:
+                        isNewInter = False
+                try:
+                    if obj2.fastDist(self.app, newInter[0], newInter[1]) > 0.5:
+                        isNewInter = False
+                except:
+                    if obj2.distance(self.app, newInter[0], newInter[1]) > 0.5:
+                        isNewInter = False
                 for elem in allIntersections:
                     if Point.distance(newInter[0], newInter[1], elem[0], elem[1]) < 1:
                         isNewInter = False
