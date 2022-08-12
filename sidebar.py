@@ -106,7 +106,7 @@ class Button(object):
         label1 = self.app.allPoints[ellipse.focusIdx1].label
         label2 = self.app.allPoints[ellipse.focusIdx2].label
         label3 = self.app.allPoints[ellipse.borderIdx].label
-        ellipseStr = f'Circle({label1}, {label2}, {label3})'
+        ellipseStr = f'Ellipse({label1}, {label2}, {label3})'
         canvas.create_oval(10, startY - 5, 20, startY + 5, fill=color, width=1)
         canvas.create_text(20, startY, 
                             text=f' {ellipse.label} : {ellipseStr}',

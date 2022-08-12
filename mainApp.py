@@ -30,14 +30,14 @@ def appStarted(app):
 
     app.points = []
     app.pointNames = set()
-    app.points.append(Point(app, 0,5))
-    app.pointNames.add(app.points[0].label)
-    app.points.append(Point(app, 5,0))
-    app.pointNames.add(app.points[1].label)
-    app.points.append(Point(app, 10,10))
-    app.pointNames.add(app.points[2].label)
-    app.points.append(Point(app, 7,15))
-    app.pointNames.add(app.points[3].label)
+    # app.points.append(Point(app, 0,5))
+    # app.pointNames.add(app.points[0].label)
+    # app.points.append(Point(app, 5,0))
+    # app.pointNames.add(app.points[1].label)
+    # app.points.append(Point(app, 10,10))
+    # app.pointNames.add(app.points[2].label)
+    # app.points.append(Point(app, 7,15))
+    # app.pointNames.add(app.points[3].label)
     
     app.intersections = []
     app.allPoints = []
@@ -45,23 +45,23 @@ def appStarted(app):
 
     app.lines = []
     app.defaultObjNames = [ptName.lower() for ptName in app.defaultNames]
-    app.currObjIndex = 10
-    app.lines.append(Line(app, 0, 1, 'a'))
-    app.lines.append(Line(app, 2, 3, 'b'))
+    app.currObjIndex = 0
+    # app.lines.append(Line(app, 0, 1, 'a'))
+    # app.lines.append(Line(app, 2, 3, 'b'))
 
     app.polygons = []
-    app.polygons.append(Polygon('g', (0,1,2,3)))
+    #app.polygons.append(Polygon('g', (0,1,2,3)))
     #app.polygons.append(Polygon('h', (0,1,2)))
 
     app.circles = []
-    app.circles.append(Circle('m', 0, 1))
-    app.circles.append(Circle('n', 0, 1, index3 = 2))
+    #app.circles.append(Circle('m', 0, 1))
+    #app.circles.append(Circle('n', 0, 1, index3 = 2))
 
     app.ellipses = []
-    app.ellipses.append(Ellipse(app, 0, 1, 2, 'o'))
+    #app.ellipses.append(Ellipse(app, 0, 1, 2, 'o'))
 
     app.objects = [app.lines, app.polygons, app.circles, app.ellipses]
-    app.intersections = [Intersection(app,2,1,2,0), Intersection(app, 0,0,0,1)]
+    #app.intersections = [Intersection(app,2,1,2,0), Intersection(app, 0,0,0,1)]
     updateAllPoints(app)
 
     app.sidebar = Sidebar(app)
@@ -160,7 +160,7 @@ def mouseDragged(app, event):
     (minIndex, isLabelMin) = closestObject(app, event)
     polyDist = closestPolygon(app, event)[1]
     if minIndex == -1:
-        if polyDist < 2:
+        if polyDist != None and polyDist < 2:
             polygonDragging(app, event)
         else:
             boardDragging(app, event)
