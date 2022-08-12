@@ -1,5 +1,5 @@
 #################################################
-# #  Button
+# #  Button class
 #################################################
 
 from cmu_112_graphics import *
@@ -17,6 +17,7 @@ class Button(object):
         self.buttonObject = buttonObject
         self.buttonHeight =  app.height / 40
     
+    # draws a certain button based on the type using helper functions
     def drawButton(self, canvas, startY):
         if self.bType == 'point':
             self.drawPointButton(canvas, startY)
@@ -29,6 +30,7 @@ class Button(object):
         elif self.bType == 'ellipse':
             self.drawEllipseButton(canvas, startY)
 
+    # draws a point button with the point's info
     def drawPointButton(self, canvas, startY):
         if self.isClicked:
             canvas.create_rectangle(0, startY - 10, self.app.width/10, startY + 10,
@@ -42,6 +44,7 @@ class Button(object):
         canvas.create_text(20, startY, text=f' {point.label} : ({point.x:.2f}, {point.y:.2f})',
                             anchor = 'w', fill = 'black', font = 'Arial 15 bold')
 
+    # draws a line button with the line's info
     def drawLineButton(self, canvas, startY):
         if self.isClicked:
             canvas.create_rectangle(0, startY - 10, self.app.width/10, startY + 10,
@@ -56,6 +59,7 @@ class Button(object):
                             text=f' {line.label} : Line({line.app.allPoints[line.index1].label}, {line.app.allPoints[line.index2].label})',
                             anchor = 'w', fill = 'black', font = 'Arial 15 bold')
 
+    # draws a polygon button with the polygon's info
     def drawPolygonButton(self, canvas, startY):
         if self.isClicked:
             canvas.create_rectangle(0, startY - 10, self.app.width/10, startY + 10,
@@ -73,6 +77,7 @@ class Button(object):
                             text=f' {polygon.label} : {polyStr}',
                             anchor = 'w', fill = 'black', font = 'Arial 15 bold')
 
+    # draws a circle button with the circle's info
     def drawCircleButton(self, canvas, startY):
         if self.isClicked:
             canvas.create_rectangle(0, startY - 10, self.app.width/10, startY + 10,
@@ -94,6 +99,7 @@ class Button(object):
                             text=f' {circle.label} : {circleStr}',
                             anchor = 'w', fill = 'black', font = 'Arial 15 bold')
 
+    # draws an ellipse button with the ellipse's info
     def drawEllipseButton(self, canvas, startY):
         if self.isClicked:
             canvas.create_rectangle(0, startY - 10, self.app.width/10, startY + 10,
@@ -114,7 +120,7 @@ class Button(object):
 
 
 #################################################
-# #  Sidebar
+# #  Sidebar class
 #################################################
 
 class Sidebar(object):
@@ -149,13 +155,16 @@ class Sidebar(object):
         self.drawCircles(canvas)
         self.drawEllipses(canvas)
 
+    # creates the logo on the sidebar
     def createLogo(self, canvas):
         canvas.create_image(self.width/2, self.logoHeight/2, image=ImageTk.PhotoImage(self.scaledLogo))
         canvas.create_rectangle(0,0,self.width,self.logoHeight,outline = 'black', 
                                 width = 3, fill = '')
     
+    # draws the point buttons and header
     def drawPoints(self, canvas):
-        self.pointButtons = self.pointButtons[:len(self.app.points)]+[Button(self.app, 'point', point) for point in self.app.allPoints[len(self.app.points):]]
+        self.pointButtons = self.pointButtons[:len(self.app.points)]
+        self.pointButtons += [Button(self.app, 'point', point) for point in self.app.allPoints[len(self.app.points):]]
         startY = self.logoHeight + self.boxHeight/2
         headerText = 'Points v'
         if self.showPoints: headerText = 'Points ^'
@@ -167,7 +176,7 @@ class Sidebar(object):
             startY += self.boxHeight
             pointButton.drawButton(canvas,startY)
 
-
+    # draws the line buttons and header
     def drawLines(self, canvas):
         startY = self.logoHeight + self.boxHeight/2
         if self.showPoints:
@@ -184,7 +193,7 @@ class Sidebar(object):
             startY += self.boxHeight
             lineButton.drawButton(canvas,startY)
 
-
+    # draws the polygon buttons and header
     def drawPolygons(self, canvas):
         startY = self.logoHeight + self.boxHeight/2
         if self.showPoints:
@@ -203,6 +212,7 @@ class Sidebar(object):
             startY += self.boxHeight
             polygonButton.drawButton(canvas, startY)
         
+    # draws the circle buttons and header
     def drawCircles(self, canvas):
         startY = self.logoHeight + self.boxHeight/2
         if self.showPoints:
@@ -223,6 +233,7 @@ class Sidebar(object):
             startY += self.boxHeight
             circleButton.drawButton(canvas, startY)
 
+    # draws the ellipse buttons and header
     def drawEllipses(self, canvas):
         startY = self.logoHeight + self.boxHeight/2
         if self.showPoints:
@@ -245,6 +256,7 @@ class Sidebar(object):
             startY += self.boxHeight
             ellipseButton.drawButton(canvas, startY)
 
+    # shortcut method to transfer text name to desired button list
     def translateToButton(self, s):
         if s == 'point': return self.pointButtons
         if s == 'line': return self.lineButtons
@@ -252,6 +264,7 @@ class Sidebar(object):
         if s == 'circle': return self.circleButtons
         if s == 'ellipse': return self.ellipseButtons
 
+    # does the process of clicking a button
     def clickButton(self, buttonType, index):
         if self.clicked == True:
             self.translateToButton(self.clickedObjectType)[self.clickedObjectIndex].isClicked = False
@@ -263,6 +276,7 @@ class Sidebar(object):
         self.clickedObjectIndex = index
         self.clicked = True
 
+    # does the necessary clicking and header collapsing
     def doButtonAction(self, x, y):
         if x > self.width or y < self.logoHeight: return
 

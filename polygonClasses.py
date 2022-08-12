@@ -1,5 +1,5 @@
 #################################################
-# # Polygon
+# # Polygon class
 #################################################
 
 from cmu_112_graphics import *
@@ -43,6 +43,7 @@ class Polygon(object):
                 minDist = ls.distance(app, x,y)
         return minDist
 
+    # computes the coordinates of the closest point
     def closestPoint(self, app, x, y):
         minPoint = None
         minDist = None
@@ -58,11 +59,13 @@ class Polygon(object):
                 minPoint = ls.closestPoint(app, x, y)
         return minPoint
 
+    # moves the polygon based on the desired shift
     def movePolygon(self, app, dx, dy):
         for index in self.indices:
             app.allPoints[index].x += dx
             app.allPoints[index].y += dy
 
+    # computes area of polygon based on generalized shoelace algorithm
     def computeArea(self, app):
         xList = [app.allPoints[index].x for index in self.indices]
         xList.append(app.allPoints[self.indices[0]].x)

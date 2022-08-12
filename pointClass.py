@@ -1,5 +1,5 @@
 #################################################
-# # Point and Intersection class 
+# # Point class
 #################################################
 
 from cmu_112_graphics import *
@@ -49,6 +49,7 @@ class Point(object):
             self.label_dx = dx
             self.label_dy = dy
 
+    # moves the point in a certain way depending on whether it is on an object
     def movePoint(self, newX, newY):
         if not self.canMove: return
         
@@ -76,6 +77,10 @@ class Point(object):
         canvas.create_text(labelPixelX, labelPixelY, text = self.label,
                            fill = 'green', font = 'Arial 15 bold')
     
+#################################################
+# # Intersection class
+#################################################
+
 class Intersection(object):
     def __init__(self, app, index1, index2, index3, index4):
         self.app = app
@@ -86,6 +91,7 @@ class Intersection(object):
         self.allIntersections = []
         self.labels = []
 
+    # computes the best direction to minimize the sum of distance to the objs
     def computeBestDir(self, obj1, obj2, r, currX, currY):
         thetas = set(i * math.pi / 15 for i in range(30))
         minDist, bestdx, bestdy = None, None, None
@@ -105,7 +111,7 @@ class Intersection(object):
                 bestdx, bestdy = dx, dy
         return (bestdx, bestdy)
             
-
+    # computes the ending point of gradient flow algo from a given start
     def computeIntersectStart(self, obj1, obj2, numIter, startX, startY):
         r1, r2, r3 = 5, 0.5, 0.01
         currX, currY = startX, startY
@@ -123,6 +129,7 @@ class Intersection(object):
             currY += dy
         return (currX, currY)
 
+    # computes all possible intersection, removes duplicates
     def computeAllIntersections(self, obj1, obj2, numIter):
         allIntersections = []
         for xVal in [0, 100, -100]:
@@ -150,6 +157,7 @@ class Intersection(object):
                     allIntersections.append(newInter)
         return allIntersections
 
+    # update all intersections if the objects move
     def updateIntersection(self):
         for label in self.labels:
             self.app.pointNames.remove(label)

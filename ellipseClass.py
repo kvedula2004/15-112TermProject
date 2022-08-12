@@ -14,6 +14,7 @@ class Ellipse(object):
         self.label = label
         self.isDrawn = isDrawn
 
+    # computes the equation of ellipse from foci coordinates, border pt
     def computeEquation(self):
         f1_x, f1_y = self.app.allPoints[self.focusIdx1].x, self.app.allPoints[self.focusIdx1].y
         f2_x, f2_y = self.app.allPoints[self.focusIdx2].x, self.app.allPoints[self.focusIdx2].y
@@ -31,6 +32,8 @@ class Ellipse(object):
         if C == 0: C = 0.001
         return (A,B,C,D,E,F)
 
+    # computes the domain of the ellipse relation 
+    # (all x vals for which there is y val)
     def xInterval(self):
         (A,B,C,D,E,F) = self.computeEquation()
         quadCoeff = B**2-4*A*C
@@ -42,6 +45,7 @@ class Ellipse(object):
         x2 = (-linearCoeff+discriminant)/(2*quadCoeff)
         return (min(x1, x2), max(x1, x2))
 
+    # solves for the values of y given the value of x
     def getYVals(self, x):
         (A,B,C,D,E,F) = self.computeEquation()
         quadCoeff = C
@@ -53,6 +57,7 @@ class Ellipse(object):
         y2 = (-linearCoeff+discriminant)/(2*quadCoeff)
         return (min(y1,y2), max(y1,y2))
 
+    # computes the closest point on the ellipse wrt to a point
     def closestPoint(self, app, x, y):
         bestX, bestY = None, None
         closestDist = None
@@ -71,10 +76,12 @@ class Ellipse(object):
             startX += step
         return (bestX, bestY)
 
+    # computes the distance between a point and ellipse (approximation)
     def distance(self, app, x, y):
         closestPt = self.closestPoint(app, x, y)
         return Point.distance(x, y, closestPt[0], closestPt[1])
 
+    # does a fast distance method used in intersection for a speedup
     def fastDist(self, app, x, y):
         f1_x, f1_y = self.app.allPoints[self.focusIdx1].x, self.app.allPoints[self.focusIdx1].y
         f2_x, f2_y = self.app.allPoints[self.focusIdx2].x, self.app.allPoints[self.focusIdx2].y
@@ -84,6 +91,8 @@ class Ellipse(object):
         dist = Point.distance(f1_x, f1_y, x, y) + Point.distance(f2_x, f2_y, x, y)
         return abs(d-dist)
     
+    # ! View method (draw ellipse)
+
     def drawEllipse(self, canvas):
         if not self.isDrawn: return
         startX, endX = self.xInterval()[0]+0.001, self.xInterval()[1]-0.001

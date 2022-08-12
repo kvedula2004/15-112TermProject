@@ -30,14 +30,6 @@ def appStarted(app):
 
     app.points = []
     app.pointNames = set()
-    app.points.append(Point(app, 0,5))
-    app.pointNames.add(app.points[0].label)
-    app.points.append(Point(app, 5,0))
-    app.pointNames.add(app.points[1].label)
-    app.points.append(Point(app, 10,10))
-    app.pointNames.add(app.points[2].label)
-    app.points.append(Point(app, 7,15))
-    app.pointNames.add(app.points[3].label)
     
     app.intersections = []
     app.allPoints = []
@@ -46,27 +38,16 @@ def appStarted(app):
     app.lines = []
     app.defaultObjNames = [ptName.lower() for ptName in app.defaultNames]
     app.currObjIndex = 0
-    app.lines.append(Line(app, 0, 1, 'a'))
-    app.lines.append(Line(app, 2, 3, 'b'))
 
     app.polygons = []
-    app.polygons.append(Polygon('g', (0,1,2,3)))
-    app.polygons.append(Polygon('h', (0,1,2)))
-
     app.circles = []
-    app.circles.append(Circle('m', 0, 1))
-    app.circles.append(Circle('n', 0, 1, index3 = 2))
-
     app.ellipses = []
-    app.ellipses.append(Ellipse(app, 0, 1, 2, 'o'))
-
     app.objects = [app.lines, app.polygons, app.circles, app.ellipses]
-    app.intersections = [Intersection(app,2,1,2,0), Intersection(app, 0,0,0,1)]
-    updateAllPoints(app)
 
     app.sidebar = Sidebar(app)
     app.inputParse = InputParse(app, '')
 
+# updates all of the intersection points every time mouse dragging occurs
 def updateAllPoints(app):
     app.allPoints = [] + app.points
     for intersection in app.intersections:
@@ -114,6 +95,7 @@ def boardDragging(app, event):
         app.board.changeOrigin(app.board.originX + dx, app.board.originY + dy)
         app.isBoardDragging = False
 
+# computes the closest polygon and its distance to the event click
 def closestPolygon(app, event):
     newX, newY = app.board.getPointFromPixel(app, event.x, event.y)
     minIndex = None
@@ -129,6 +111,7 @@ def closestPolygon(app, event):
             minIndex = i
     return (minIndex, minDist)
 
+# drags the polygon in question with the same mechanic as board dragging
 def polygonDragging(app, event):
     if not app.isPolygonDragging:
         app.originalClick_X, app.originalClick_Y = app.board.getPointFromPixel(app, event.x, event.y)
@@ -140,7 +123,6 @@ def polygonDragging(app, event):
         minIndex = closestPolygon(app, event)[0]
         app.polygons[minIndex].movePolygon(app, -dx, -dy)
         app.isPolygonDragging = False
-
 
 # moves point to mouse coordinates
 def pointDragging(app, event, index):
@@ -178,7 +160,7 @@ def timerFired(app):
         app.isPolygonDragging = False
 
 def keyPressed(app, event):
-    # zooms in and out
+    # zooms in and out (also r reset key)
     if event.key == 'r':
         appStarted(app)
     if event.key == 'Up':
@@ -187,6 +169,7 @@ def keyPressed(app, event):
         app.board.gridLineSpace = min(app.board.gridLineSpace+2, 20)
 
 def mousePressed(app, event):
+    # modifies the sidebar and deals with input command line
     app.sidebar.doButtonAction(event.x, event.y)
     if event.x <= app.sidebar.scaledLogo.size[0] and event.y <= app.sidebar.scaledLogo.size[1]:
         input = app.getUserInput('Enter a valid command')
@@ -195,12 +178,11 @@ def mousePressed(app, event):
         app.sidebar.__init__(app)
         return
 
-
 #################################################
 # # VIEW
 #################################################
 
-# draws all points in app.points
+# draws all points in app.allPoints
 def drawPoints(app, canvas):
     for point in app.allPoints:
         point.movePoint(point.x, point.y)
@@ -219,10 +201,12 @@ def drawPolygons(app, canvas):
     for polygon in app.polygons:
         polygon.drawPolygon(app.board, app, canvas)
 
+# draws all circles in app.circles
 def drawCircles(app, canvas):
     for circle in app.circles:
         circle.drawCircle(app.board, app, canvas)
 
+# draws all ellipses in app.ellipses
 def drawEllipses(app, canvas):
     for ellipse in app.ellipses:
         ellipse.drawEllipse(canvas)
@@ -235,7 +219,6 @@ def redrawAll(app, canvas):
     drawLines(app, canvas)
     drawPoints(app, canvas)
     app.sidebar.drawSidebar(canvas)
-    
 
 def main():
     runApp(width = 1440, height = 785)

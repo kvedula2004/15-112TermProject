@@ -13,6 +13,7 @@ class Circle(object):
         self.index1, self.index2, self.index3 = index1, index2, index3
         self.isDrawn = isDrawn
 
+    # computes the center of the circle using intersection of perp bisectors
     def computeCenter(self, points):
         if self.index3 == None:
             return (points[self.index1].x, points[self.index1].y)
@@ -39,6 +40,7 @@ class Circle(object):
         centerY = centerX * line12_m + line12_b
         return (centerX, centerY)
 
+    # computes the radius of the circle
     def computeR(self, points):
         if self.index3 == None:
             x1, y1 = points[self.index1].x, points[self.index1].y
@@ -49,12 +51,14 @@ class Circle(object):
         x1, y1 = points[self.index1].x, points[self.index1].y
         return Point.distance(x1, y1, centerX, centerY)
 
+    # computes the distance from a point to the circle
     def distance(self, app, x, y):
         centerX, centerY = self.computeCenter(app.allPoints)
         r = self.computeR(app.allPoints)
         dist = Point.distance(centerX, centerY, x, y)
         return abs(dist - r)
 
+    # computes the coordinates of the closest point on a circle
     def closestPoint(self, app, x, y):
         centerX, centerY = self.computeCenter(app.allPoints)
         r = self.computeR(app.allPoints)
@@ -63,6 +67,8 @@ class Circle(object):
         dx /= (dist/(r+0.0001))
         dy /= (dist/(r+0.0001))
         return (centerX + dx, centerY + dy)
+
+    # ! View method (draw point)
 
     def drawCircle(self, board, app, canvas):
         if not self.isDrawn: return

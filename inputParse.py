@@ -27,6 +27,7 @@ class InputParse(object):
         except:
             return False
 
+    # creates a point based on the valid input, changes output to precise error
     def createPoint(self):
         # 'Point(...)' to '...'
         interior = self.input[6:-1]
@@ -63,6 +64,7 @@ class InputParse(object):
                     return
             self.output = 'Not valid object.'
 
+    # creates a line based on the valid input, changes output to precise error
     def createLine(self):
         # 'Line(...)' to '...'
         interior = self.input[5:-1]
@@ -86,6 +88,7 @@ class InputParse(object):
         except:
             self.output = 'Not valid object.'
 
+    # creates a polygon based on valid input, changes output to precise error
     def createPolygon(self):
         # 'Polygon(...)' to '...'
         interior = self.input[8:-1]
@@ -108,6 +111,7 @@ class InputParse(object):
         except:
             self.output = 'Not valid object.'
 
+    # creates circle based on the valid input, changes output to precise error
     def createCircle(self):
         # 'Circle(...)' to '...'
         interior = self.input[7:-1]
@@ -135,6 +139,7 @@ class InputParse(object):
         except:
             self.output = 'Not valid object.'
             
+    # creates intersection based on valid input, changes output to precise error
     def createIntersection(self):
         # 'Intersect(...)' to '...'
         interior = self.input[10:-1]
@@ -161,6 +166,7 @@ class InputParse(object):
         except:
             self.output = 'Not valid intersection.'
     
+    # computes the area of a polygon given input
     def getArea(self):
         # 'Area(...)' to '...'
         interior = self.input[5:-1]
@@ -170,6 +176,7 @@ class InputParse(object):
                 return
         self.output = 'Not valid polygon.'
 
+    # creates ellipse based on the valid input, changes output to precise error
     def createEllipse(self):
         # 'Ellipse(...)' to '...'
         interior = self.input[8:-1]
@@ -192,6 +199,7 @@ class InputParse(object):
         except:
             self.output = 'Not valid ellipse.'
 
+    # parses input based on any prefix of input
     def parseInput(self):
         if self.input == None:
             self.output = ''
