@@ -155,7 +155,7 @@ class Sidebar(object):
                                 width = 3, fill = '')
     
     def drawPoints(self, canvas):
-        self.pointButtons = [Button(self.app, 'point', point) for point in self.app.allPoints]
+        self.pointButtons = self.pointButtons[:len(self.app.points)]+[Button(self.app, 'point', point) for point in self.app.allPoints[len(self.app.points):]]
         startY = self.logoHeight + self.boxHeight/2
         headerText = 'Points v'
         if self.showPoints: headerText = 'Points ^'
@@ -214,7 +214,7 @@ class Sidebar(object):
         startY += 3*self.boxHeight
 
         headerText = 'Circles v'
-        if self.showPolygons: headerText = 'Circles ^'
+        if self.showCircles: headerText = 'Circles ^'
         canvas.create_text(self.width/2, startY, anchor = 'c',
                            text = headerText, font = 'Arial 20 bold', fill = 'pink')
 
@@ -236,7 +236,7 @@ class Sidebar(object):
         startY += 4*self.boxHeight
 
         headerText = 'Ellipses v'
-        if self.showPolygons: headerText = 'Ellipses ^'
+        if self.showEllipses: headerText = 'Ellipses ^'
         canvas.create_text(self.width/2, startY, anchor = 'c',
                            text = headerText, font = 'Arial 20 bold', fill = 'pink')
 
@@ -339,7 +339,3 @@ class Sidebar(object):
             else:
                 y -= (len(self.ellipseButtons)+1)
         else: y -= 1
-
-
-                
-    

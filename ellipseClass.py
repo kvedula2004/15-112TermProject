@@ -2,7 +2,6 @@
 # # Ellipse class 
 #################################################
 
-from tracemalloc import start
 from cmu_112_graphics import *
 from boardClass import *
 from pointClass import *

@@ -1,5 +1,5 @@
 #################################################
-# # Polygon and RegularPolygon class 
+# # Polygon
 #################################################
 
 from cmu_112_graphics import *
@@ -74,23 +74,4 @@ class Polygon(object):
             LHS += yList[i] * xList[i+1]
             RHS += xList[i] * yList[i+1]
         return 0.5 * abs(LHS - RHS)
-
-# TODO finish
-class RegularPolygon(object):
-    def __init__(self, app, index1, index2, numSides, label, isDrawn = True):
-        self.app = app
-        self.index1, self.index2 = index1, index2
-        self.numSides = numSides
-        self.label = label
-        self.isDrawn = isDrawn
-
-    def getVertices(self):
-        polyVertices = [(self.app.allPoints[self.index1].x, self.app.allPoints[self.index1].y)]
-        polyVertices += [[(self.app.allPoints[self.index2].x, self.app.allPoints[self.index2].y)]]
-        theta = math.pi - 2*math.pi/(self.numSides)
-        while len(polyVertices) < self.numSides:
-            polyVertices.append(self.rotate(polyVertices[-1], polyVertices[-2], theta))
-        return polyVertices
-
-    #def rotate(self, center, radius, theta):
 
