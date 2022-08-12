@@ -188,7 +188,7 @@ class InputParse(object):
                 for j in range(len(newInterior)):
                     if newInterior[j] == label:
                         labelIndices[j] = i
-            self.app.ellipses.append(Ellipse(self.app, labelIndices[0], labelIndices[1], labelIndices[2], label))
+            self.app.ellipses.append(Ellipse(self.app, labelIndices[0], labelIndices[1], labelIndices[2], ellipseLabel))
         except:
             self.output = 'Not valid ellipse.'
 

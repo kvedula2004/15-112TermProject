@@ -68,7 +68,6 @@ def appStarted(app):
     app.inputParse = InputParse(app, '')
 
 def updateAllPoints(app):
-    #oldHiddenStatus
     app.allPoints = [] + app.points
     for intersection in app.intersections:
         #oldHiddenStatus = [pt]
@@ -173,7 +172,7 @@ def mouseDragged(app, event):
 def timerFired(app):
     # clears up the queue of past dragging history (1 = drag, 0 = not drag)
     updateAllPoints(app)
-    app.sidebar.__init__(app)
+    #app.sidebar.__init__(app)
     app.lastActions.pop(0)
     app.lastActions.append(0)
     if app.lastActions == [0] * 10:

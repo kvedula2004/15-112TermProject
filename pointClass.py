@@ -8,7 +8,7 @@ import math
 
 class Point(object):
     def __init__(self, app, xCoord, yCoord, pointName = '', 
-                 currObject = None, canMove = True):
+                 currObject = None, canMove = True, isDrawn = True):
         self.app = app
         if currObject == None:
             self.x = xCoord
@@ -27,7 +27,7 @@ class Point(object):
         self.label_dx = -0.5
         self.label_dy = 0.5
         self.canMove = canMove
-        self.isDrawn = True
+        self.isDrawn = isDrawn
         self.currObject = currObject
 
     # computes distance between (x1, y1) and (x2, y2)
