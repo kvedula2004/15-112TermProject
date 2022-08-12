@@ -87,7 +87,7 @@ class Intersection(object):
         self.labels = []
 
     def computeBestDir(self, obj1, obj2, r, currX, currY):
-        thetas = set(i * math.pi / 10 for i in range(20))
+        thetas = set(i * math.pi / 15 for i in range(30))
         minDist, bestdx, bestdy = None, None, None
         for theta in thetas:
             dx, dy = r*math.cos(theta), r*math.sin(theta)
