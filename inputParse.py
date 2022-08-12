@@ -53,13 +53,13 @@ class InputParse(object):
                 raise Exception
         except:
             interior = interior.strip()
-            objectList = self.app.lines + self.app.polygons + self.app.circles
+            objectList = self.app.lines + self.app.polygons + self.app.circles + self.app.ellipses
             objectNames = [anyObject.label for anyObject in objectList]
             for index in range(len(objectNames)):
                 objLabel = objectNames[index]
                 if interior == objLabel:
-                    self.app.allPoints.append(Point(self.app,0,0,pointName='',currObject=objectList[index]))
-                    self.app.pointNames.add(self.app.allPoints[-1].label)
+                    self.app.points.append(Point(self.app,0,0,pointName='',currObject=objectList[index]))
+                    self.app.pointNames.add(self.app.points[-1].label)
                     return
             self.output = 'Not valid object.'
 

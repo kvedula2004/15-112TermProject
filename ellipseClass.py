@@ -2,6 +2,7 @@
 # # Ellipse class 
 #################################################
 
+from tracemalloc import start
 from cmu_112_graphics import *
 from boardClass import *
 from pointClass import *
@@ -52,6 +53,37 @@ class Ellipse(object):
         y1 = (-linearCoeff-discriminant)/(2*quadCoeff)
         y2 = (-linearCoeff+discriminant)/(2*quadCoeff)
         return (min(y1,y2), max(y1,y2))
+
+    def closestPoint(self, app, x, y):
+        bestX, bestY = None, None
+        closestDist = None
+        startX, endX = self.xInterval()[0]+0.001, self.xInterval()[1]-0.001
+        step = 0.1
+        while(startX < endX):
+            y1, y2 = self.getYVals(startX)
+            dist1 = Point.distance(x, y, startX, y1)
+            if closestDist == None or dist1 < closestDist:
+                bestX, bestY = startX, y1
+                closestDist = dist1
+            dist2 = Point.distance(x, y, startX, y2)
+            if closestDist == None or dist2 < closestDist:
+                bestX, bestY = startX, y2
+                closestDist = dist2
+            startX += step
+        return (bestX, bestY)
+
+    def distance(self, app, x, y):
+        closestPt = self.closestPoint(app, x, y)
+        return Point.distance(x, y, closestPt[0], closestPt[1])
+
+    def fastDist(self, app, x, y):
+        f1_x, f1_y = self.app.allPoints[self.focusIdx1].x, self.app.allPoints[self.focusIdx1].y
+        f2_x, f2_y = self.app.allPoints[self.focusIdx2].x, self.app.allPoints[self.focusIdx2].y
+        ptX, ptY = self.app.allPoints[self.borderIdx].x, self.app.allPoints[self.borderIdx].y
+
+        d = Point.distance(f1_x, f1_y, ptX, ptY) + Point.distance(f2_x, f2_y, ptX, ptY)
+        dist = Point.distance(f1_x, f1_y, x, y) + Point.distance(f2_x, f2_y, x, y)
+        return abs(d-dist)
     
     def drawEllipse(self, canvas):
         if not self.isDrawn: return

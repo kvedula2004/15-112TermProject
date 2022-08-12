@@ -92,8 +92,14 @@ class Intersection(object):
         for theta in thetas:
             dx, dy = r*math.cos(theta), r*math.sin(theta)
             candidateX, candidateY = currX + dx, currY + dy
-            candidateDist = obj1.distance(self.app, candidateX, candidateY)
-            candidateDist += obj2.distance(self.app, candidateX, candidateY)
+            try:
+                candidateDist = obj1.fastDist(self.app, candidateX, candidateY)
+            except:
+                candidateDist = obj1.distance(self.app, candidateX, candidateY)
+            try:
+                candidateDist += obj2.fastDist(self.app, candidateX, candidateY)
+            except:
+                candidateDist += obj2.distance(self.app, candidateX, candidateY)
             if minDist == None or candidateDist < minDist:
                 minDist = candidateDist
                 bestdx, bestdy = dx, dy

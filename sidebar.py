@@ -155,6 +155,7 @@ class Sidebar(object):
                                 width = 3, fill = '')
     
     def drawPoints(self, canvas):
+        self.pointButtons = [Button(self.app, 'point', point) for point in self.app.allPoints]
         startY = self.logoHeight + self.boxHeight/2
         headerText = 'Points v'
         if self.showPoints: headerText = 'Points ^'
